@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.FilmValidationException;
@@ -10,15 +11,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-	private HashMap<Integer, Film> films = new HashMap<>();
+	private final HashMap<Integer, Film> films = new HashMap<>();
 	private Integer idFilm = 1;
 	private static final LocalDate MIN_DATE_RELEASE = LocalDate.of(1895, 12, 28);
 
 	@GetMapping
 	public List<Film> getFilms() {
+		log.info("Запрошен список всех фильмов");
 		return new ArrayList<>(films.values());
 	}
 
@@ -29,6 +32,7 @@ public class FilmController {
 				film.setId(idFilm++);
 			}
 			films.put(film.getId(), film);
+			log.info("Фильм {} добавлен", film);
 		}
 		return film;
 	}
@@ -38,6 +42,7 @@ public class FilmController {
 		if (validate(film)) {
 			if (films.containsKey(film.getId())) {
 				films.put(film.getId(), film);
+				log.info("Фильм {} обновлен", film);
 			} else throw new FilmNotFoundException("Фильм с id " + film.getId() + " не найден!");
 		}
 		return film;
@@ -56,6 +61,6 @@ public class FilmController {
 		} else {
 			return true;
 		}
-		throw new FilmValidationException("Поле " + value + " не прошло валидацию");
+		throw new FilmValidationException("Поле " + value + " в объекте " + film + " не прошло валидацию");
 	}
 }

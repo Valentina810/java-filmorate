@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserValidationException;
@@ -10,14 +11,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
-	private HashMap<Integer, User> users = new HashMap<>();
+	private final HashMap<Integer, User> users = new HashMap<>();
 	private Integer idUser = 1;
 
 	@GetMapping
 	public List<User> getUsers() {
+		log.info("Запрошен список всех пользователей");
 		return new ArrayList<>(users.values());
 	}
 
@@ -28,6 +31,7 @@ public class UserController {
 				user.setId(idUser++);
 			}
 			users.put(user.getId(), user);
+			log.info("Пользователь {} добавлен", user);
 		}
 		return user;
 	}
@@ -37,6 +41,7 @@ public class UserController {
 		if (validate(user)) {
 			if (users.containsKey(user.getId())) {
 				users.put(user.getId(), user);
+				log.info("Пользователь {} обновлен", user);
 			} else throw new UserNotFoundException("Пользователь с id " + user.getId() + " не найден!");
 		}
 		return user;
@@ -54,6 +59,6 @@ public class UserController {
 			user.setName(user.getLogin());
 			return true;
 		} else return true;
-		throw new UserValidationException("Поле " + value + " не прошло валидацию");
+		throw new UserValidationException("Поле " + value + " в объекте " + user + "  не прошло валидацию");
 	}
 }
