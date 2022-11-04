@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Log
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class UserNotFoundException extends RuntimeException {
-	public UserNotFoundException(final String message) {
+@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+public class UserValidationException extends RuntimeException {
+	public UserValidationException(final String message) {
 		super(message);
 		log.info(message);
 	}
