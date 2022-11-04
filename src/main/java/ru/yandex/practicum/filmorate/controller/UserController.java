@@ -49,13 +49,13 @@ public class UserController {
 
 	public boolean validate(User user) {
 		String value;
-		if (("".equals(user.getEmail()) || !user.getEmail().contains("@"))) {
+		if ((user.getEmail() == null) || ("".equals(user.getEmail()) || !user.getEmail().contains("@"))) {
 			value = "email";
-		} else if ("".equals(user.getLogin()) || user.getLogin().contains(" ")) {
+		} else if ((user.getLogin() == null) || ("".equals(user.getLogin()) || user.getLogin().contains(" "))) {
 			value = "login";
-		} else if (user.getBirthday().isAfter(LocalDate.now())) {
+		} else if ((user.getBirthday() == null) || (user.getBirthday().isAfter(LocalDate.now()))) {
 			value = "birthday";
-		} else if ("".equals(user.getName()) || (user.getName() == null)) {
+		} else if ((user.getName() == null) || ("".equals(user.getName()))) {
 			user.setName(user.getLogin());
 			return true;
 		} else return true;

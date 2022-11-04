@@ -52,12 +52,12 @@ public class FilmController {
 		String value;
 		if ((film.getName() == null) || ("".equals(film.getName()))) {
 			value = "name";
-		} else if (film.getDescription().length() > 201) {
+		} else if ((film.getDescription() == null) || (film.getDescription().length() > 200)) {
 			value = "description";
-		} else if (film.getReleaseDate().isBefore(MIN_DATE_RELEASE)) {
+		} else if ((film.getReleaseDate() == null) || (film.getReleaseDate().isBefore(MIN_DATE_RELEASE))) {
 			value = "releaseDate";
-		} else if (film.getDuration() <= 0) {
-			value = "releaseDate";
+		} else if ((film.getDuration() == null) || (film.getDuration() <= 0)) {
+			value = "duration";
 		} else {
 			return true;
 		}
