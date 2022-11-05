@@ -4,6 +4,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
 @Data
@@ -11,9 +15,16 @@ import java.time.LocalDate;
 @Builder
 public class User implements Cloneable {
 	private Integer id;
+	@Email
+	@NotNull
+	@NotBlank
 	private String email;
+	@NotNull
+	@NotBlank
 	private String login;
 	private String name;
+	@NotNull
+	@PastOrPresent
 	private LocalDate birthday;
 
 	public User clone() {

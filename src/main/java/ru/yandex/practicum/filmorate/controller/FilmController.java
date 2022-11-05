@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.FilmValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +27,7 @@ public class FilmController {
 	}
 
 	@PostMapping
-	public Film addFilm(@RequestBody Film film) {
+	public Film addFilm(@Valid @RequestBody Film film) {
 		if (validate(film)) {
 			if (film.getId() == null) {
 				film.setId(idFilm++);
@@ -38,7 +39,7 @@ public class FilmController {
 	}
 
 	@PutMapping
-	public Film updateFilm(@RequestBody Film film) {
+	public Film updateFilm(@Valid @RequestBody Film film) {
 		if (validate(film)) {
 			if (films.containsKey(film.getId())) {
 				films.put(film.getId(), film);
