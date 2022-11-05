@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.UserController;
-import ru.yandex.practicum.filmorate.exception.UserValidationException;
+import ru.yandex.practicum.filmorate.exception.EntityValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
@@ -25,7 +25,7 @@ public class UserValidationTest {
 				.name("username")
 				.birthday(LocalDate.of(1990, 1, 1))
 				.build();
-		final UserValidationException exception = assertThrows(UserValidationException.class,
+		final EntityValidationException exception = assertThrows(EntityValidationException.class,
 				() -> userController.addUser(user));
 		assertTrue(exception.getMessage().contains("email"));
 		assertTrue(exception.getMessage().contains("не прошло валидацию"));
@@ -39,7 +39,7 @@ public class UserValidationTest {
 				.name("username")
 				.birthday(LocalDate.of(1990, 1, 1))
 				.build();
-		final UserValidationException exception = assertThrows(UserValidationException.class,
+		final EntityValidationException exception = assertThrows(EntityValidationException.class,
 				() -> userController.addUser(user));
 		assertTrue(exception.getMessage().contains("email"));
 		assertTrue(exception.getMessage().contains("не прошло валидацию"));
@@ -53,7 +53,7 @@ public class UserValidationTest {
 				.name("username")
 				.birthday(LocalDate.of(1990, 1, 1))
 				.build();
-		final UserValidationException exception = assertThrows(UserValidationException.class,
+		final EntityValidationException exception = assertThrows(EntityValidationException.class,
 				() -> userController.addUser(user));
 		assertTrue(exception.getMessage().contains("email"));
 		assertTrue(exception.getMessage().contains("не прошло валидацию"));
@@ -79,7 +79,7 @@ public class UserValidationTest {
 				.name("username")
 				.birthday(LocalDate.of(1990, 1, 1))
 				.build();
-		final UserValidationException exception = assertThrows(UserValidationException.class,
+		final EntityValidationException exception = assertThrows(EntityValidationException.class,
 				() -> userController.addUser(user));
 		assertTrue(exception.getMessage().contains("login"));
 		assertTrue(exception.getMessage().contains("не прошло валидацию"));
@@ -93,7 +93,7 @@ public class UserValidationTest {
 				.name("username")
 				.birthday(LocalDate.of(1990, 1, 1))
 				.build();
-		final UserValidationException exception = assertThrows(UserValidationException.class,
+		final EntityValidationException exception = assertThrows(EntityValidationException.class,
 				() -> userController.addUser(user));
 		assertTrue(exception.getMessage().contains("login"));
 		assertTrue(exception.getMessage().contains("не прошло валидацию"));
@@ -107,7 +107,7 @@ public class UserValidationTest {
 				.name("username")
 				.birthday(LocalDate.of(1990, 1, 1))
 				.build();
-		final UserValidationException exception = assertThrows(UserValidationException.class,
+		final EntityValidationException exception = assertThrows(EntityValidationException.class,
 				() -> userController.addUser(user));
 		assertTrue(exception.getMessage().contains("login"));
 		assertTrue(exception.getMessage().contains("не прошло валидацию"));
@@ -176,7 +176,7 @@ public class UserValidationTest {
 				.email("fgh7ujmk@ui")
 				.login("hjkojlfe")
 				.build();
-		final UserValidationException exception = assertThrows(UserValidationException.class,
+		final EntityValidationException exception = assertThrows(EntityValidationException.class,
 				() -> userController.addUser(user));
 		assertTrue(exception.getMessage().contains("birthday"));
 		assertTrue(exception.getMessage().contains("не прошло валидацию"));
@@ -216,7 +216,7 @@ public class UserValidationTest {
 				.login("hjkojlfe")
 				.birthday(LocalDate.now().plusDays(1))
 				.build();
-		final UserValidationException exception = assertThrows(UserValidationException.class,
+		final EntityValidationException exception = assertThrows(EntityValidationException.class,
 				() -> userController.addUser(user));
 		assertTrue(exception.getMessage().contains("birthday"));
 		assertTrue(exception.getMessage().contains("не прошло валидацию"));

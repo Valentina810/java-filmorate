@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.FilmController;
-import ru.yandex.practicum.filmorate.exception.FilmValidationException;
+import ru.yandex.practicum.filmorate.exception.EntityValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
@@ -26,7 +26,7 @@ public class FilmValidationTest {
 				.releaseDate(LocalDate.of(1900, 12, 27))
 				.duration(100)
 				.build();
-		final FilmValidationException exception = assertThrows(FilmValidationException.class,
+		final EntityValidationException exception = assertThrows(EntityValidationException.class,
 				() -> filmController.addFilm(film));
 		assertTrue(exception.getMessage().contains("name"));
 		assertTrue(exception.getMessage().contains("не прошло валидацию"));
@@ -39,7 +39,7 @@ public class FilmValidationTest {
 				.releaseDate(LocalDate.of(1900, 12, 27))
 				.duration(100)
 				.build();
-		final FilmValidationException exception = assertThrows(FilmValidationException.class,
+		final EntityValidationException exception = assertThrows(EntityValidationException.class,
 				() -> filmController.addFilm(film));
 		assertTrue(exception.getMessage().contains("name"));
 		assertTrue(exception.getMessage().contains("не прошло валидацию"));
@@ -52,7 +52,7 @@ public class FilmValidationTest {
 				.releaseDate(LocalDate.of(1900, 12, 27))
 				.duration(100)
 				.build();
-		final FilmValidationException exception = assertThrows(FilmValidationException.class,
+		final EntityValidationException exception = assertThrows(EntityValidationException.class,
 				() -> filmController.addFilm(film));
 		assertTrue(exception.getMessage().contains("description"));
 		assertTrue(exception.getMessage().contains("не прошло валидацию"));
@@ -92,7 +92,7 @@ public class FilmValidationTest {
 				.releaseDate(LocalDate.of(1990, 5, 13))
 				.duration(100)
 				.build();
-		final FilmValidationException exception = assertThrows(FilmValidationException.class,
+		final EntityValidationException exception = assertThrows(EntityValidationException.class,
 				() -> filmController.addFilm(film));
 		assertTrue(exception.getMessage().contains("description"));
 		assertTrue(exception.getMessage().contains("не прошло валидацию"));
@@ -106,7 +106,7 @@ public class FilmValidationTest {
 				.releaseDate(LocalDate.of(1895, 12, 27))
 				.duration(100)
 				.build();
-		final FilmValidationException exception = assertThrows(FilmValidationException.class,
+		final EntityValidationException exception = assertThrows(EntityValidationException.class,
 				() -> filmController.addFilm(film));
 		assertTrue(exception.getMessage().contains("releaseDate"));
 		assertTrue(exception.getMessage().contains("не прошло валидацию"));
@@ -120,7 +120,7 @@ public class FilmValidationTest {
 				.releaseDate(LocalDate.of(1895, 12, 27))
 				.duration(100)
 				.build();
-		final FilmValidationException exception = assertThrows(FilmValidationException.class,
+		final EntityValidationException exception = assertThrows(EntityValidationException.class,
 				() -> filmController.addFilm(film));
 		assertTrue(exception.getMessage().contains("releaseDate"));
 		assertTrue(exception.getMessage().contains("не прошло валидацию"));
@@ -159,7 +159,7 @@ public class FilmValidationTest {
 				.description("Test description")
 				.releaseDate(LocalDate.of(1895, 12, 30))
 				.build();
-		final FilmValidationException exception = assertThrows(FilmValidationException.class,
+		final EntityValidationException exception = assertThrows(EntityValidationException.class,
 				() -> filmController.addFilm(film));
 		assertTrue(exception.getMessage().contains("duration"));
 		assertTrue(exception.getMessage().contains("не прошло валидацию"));
@@ -173,7 +173,7 @@ public class FilmValidationTest {
 				.releaseDate(LocalDate.of(1895, 12, 30))
 				.duration(-1)
 				.build();
-		final FilmValidationException exception = assertThrows(FilmValidationException.class,
+		final EntityValidationException exception = assertThrows(EntityValidationException.class,
 				() -> filmController.addFilm(film));
 		assertTrue(exception.getMessage().contains("duration"));
 		assertTrue(exception.getMessage().contains("не прошло валидацию"));
@@ -187,7 +187,7 @@ public class FilmValidationTest {
 				.releaseDate(LocalDate.of(1895, 12, 30))
 				.duration(0)
 				.build();
-		final FilmValidationException exception = assertThrows(FilmValidationException.class,
+		final EntityValidationException exception = assertThrows(EntityValidationException.class,
 				() -> filmController.addFilm(film));
 		assertTrue(exception.getMessage().contains("duration"));
 		assertTrue(exception.getMessage().contains("не прошло валидацию"));

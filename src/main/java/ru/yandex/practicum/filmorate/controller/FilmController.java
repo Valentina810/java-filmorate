@@ -2,8 +2,8 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exception.FilmValidationException;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
+import ru.yandex.practicum.filmorate.exception.EntityValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.Valid;
@@ -44,7 +44,8 @@ public class FilmController {
 			if (films.containsKey(film.getId())) {
 				films.put(film.getId(), film);
 				log.info("Фильм {} обновлен", film);
-			} else throw new FilmNotFoundException("Фильм с id " + film.getId() + " не найден!");
+			} else
+				throw new EntityNotFoundException(film.getClass().getSimpleName(), " с id " + film.getId() + " не найден!");
 		}
 		return film;
 	}
@@ -62,6 +63,6 @@ public class FilmController {
 		} else {
 			return true;
 		}
-		throw new FilmValidationException("Поле " + value + " в объекте " + film + " не прошло валидацию");
+		throw new EntityValidationException(film.getClass().getSimpleName(), "Поле " + value + " в объекте " + film + " не прошло валидацию");
 	}
 }

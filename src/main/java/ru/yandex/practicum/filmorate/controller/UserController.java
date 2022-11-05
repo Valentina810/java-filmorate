@@ -2,8 +2,8 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
-import ru.yandex.practicum.filmorate.exception.UserValidationException;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
+import ru.yandex.practicum.filmorate.exception.EntityValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
@@ -43,7 +43,8 @@ public class UserController {
 			if (users.containsKey(user.getId())) {
 				users.put(user.getId(), user);
 				log.info("Пользователь {} обновлен", user);
-			} else throw new UserNotFoundException("Пользователь с id " + user.getId() + " не найден!");
+			} else
+				throw new EntityNotFoundException(user.getClass().getSimpleName(), " с id " + user.getId() + " не найден!");
 		}
 		return user;
 	}
@@ -60,6 +61,6 @@ public class UserController {
 			user.setName(user.getLogin());
 			return true;
 		} else return true;
-		throw new UserValidationException("Поле " + value + " в объекте " + user + "  не прошло валидацию");
+		throw new EntityValidationException(user.getClass().getSimpleName(), "Поле " + value + " в объекте " + user + "  не прошло валидацию");
 	}
 }
