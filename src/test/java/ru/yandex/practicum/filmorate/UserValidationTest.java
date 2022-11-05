@@ -135,7 +135,7 @@ public class UserValidationTest {
 				.build();
 		User userExpected = testUser.clone();
 		userExpected.setName(userExpected.getLogin());
-		userController.addUser(testUser);
+		userExpected.setId(userController.addUser(testUser).getId());
 		assertEquals(userExpected, userController.getUsers().iterator().next());
 		assertEquals(1, userController.getUsers().size());
 	}
@@ -150,7 +150,7 @@ public class UserValidationTest {
 				.build();
 		User userExpected = testUser.clone();
 		userExpected.setName(userExpected.getLogin());
-		userController.addUser(testUser);
+		userExpected.setId(userController.addUser(testUser).getId());
 		assertEquals(userExpected, userController.getUsers().iterator().next());
 		assertEquals(1, userController.getUsers().size());
 	}
@@ -164,7 +164,7 @@ public class UserValidationTest {
 				.birthday(LocalDate.of(1990, 1, 1))
 				.build();
 		User userExpected = testUser.clone();
-		userController.addUser(testUser);
+		userExpected.setId(userController.addUser(testUser).getId());
 		assertEquals(userExpected, userController.getUsers().iterator().next());
 		assertEquals(1, userController.getUsers().size());
 	}
