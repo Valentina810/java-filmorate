@@ -9,6 +9,7 @@
 *.rar
 hs_err_pid*
 out/
+HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -44,3 +45,7 @@ build/
 
 *.db
 db/*
+/mvnw
+/mvnw.cmd
+/.mvn/
+*.json
