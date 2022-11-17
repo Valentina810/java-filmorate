@@ -8,11 +8,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder
 public class User implements Cloneable {
-	private Integer id;
+	private Long id;
 	@Email
 	@NotNull
 	@NotBlank
@@ -25,6 +27,8 @@ public class User implements Cloneable {
 	@PastOrPresent
 	private LocalDate birthday;
 
+	private Set<Long> friends;
+
 	public User clone() {
 		User user = User.builder().build();
 		user.id = this.id;
@@ -32,6 +36,7 @@ public class User implements Cloneable {
 		user.login = this.login;
 		user.name = this.name;
 		user.birthday = this.birthday;
+		user.friends=this.friends;
 		return user;
 	}
 }

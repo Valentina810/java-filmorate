@@ -15,11 +15,15 @@ import java.util.List;
 @Component
 public class InMemoryUserStorage implements UserStorage {
 
-	private final HashMap<Integer, User> users = new HashMap<>();
-	private Integer idUser = 1;
+	private final HashMap<Long, User> users = new HashMap<>();
+	private Long idUser = 1L;
 
 	public List<User> getUsers() {
 		return new ArrayList<>(users.values());
+	}
+
+	public User getUser(Long idUser) {
+		return users.get(idUser);
 	}
 
 	public User addUser(User user) {

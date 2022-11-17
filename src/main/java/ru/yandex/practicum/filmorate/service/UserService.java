@@ -1,0 +1,65 @@
+package ru.yandex.practicum.filmorate.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
+import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class UserService {
+	private InMemoryUserStorage inMemoryUserStorage;
+
+	@Autowired
+	public UserService(InMemoryUserStorage inMemoryUserStorage) {
+		this.inMemoryUserStorage = inMemoryUserStorage;
+	}
+
+	/**
+	 * Добавление в друзья
+	 */
+	public void addFriend(Long idUser, Long idFriend) {
+		User user = inMemoryUserStorage.getUser(idUser);
+		User friend = inMemoryUserStorage.getUser(idFriend);
+		if ((user != null) && (friend != null)) {
+			user.getFriends().add(idFriend);
+			friend.getFriends().add(idUser);
+		} else throw new EntityNotFoundException(User.class.getSimpleName(),
+				"Не найден пользователь или его друг!");
+	}
+
+	/**
+	 * Удаление из друзей
+	 */
+	public void deleteFriend(Long idUser, Long idFriend) {
+		User user = inMemoryUserStorage.getUser(idUser);
+		User friend = inMemoryUserStorage.getUser(idFriend);
+		if ((user != null) && (friend != null)) {
+			user.getFriends().remove(idFriend);
+			friend.getFriends().remove(idUser);
+		} else throw new EntityNotFoundException(User.class.getSimpleName(),
+				"Не найден пользователь или его друг!");
+	}
+
+	/**
+	 * Вывод списка общих друзей
+	 */
+	public List<Long> getGeneralFriends(Long idUser, Long idFriend) {
+		List<Long> generalFriends = new ArrayList<>();
+		User user = inMemoryUserStorage.getUser(idUser);
+		User friend = inMemoryUserStorage.getUser(idFriend);
+		if ((user != null) && (friend != null)) {
+			user.getFriends().forEach(e ->
+			{
+				if (friend.getFriends().contains(e)) {
+					generalFriends.add(e);
+				}
+			});
+			return generalFriends;
+		} else throw new EntityNotFoundException(User.class.getSimpleName(),
+				"Не найден пользователь или его друг!");
+	}
+}
