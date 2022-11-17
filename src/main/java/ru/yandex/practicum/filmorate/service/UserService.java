@@ -20,6 +20,9 @@ public class UserService {
 
 	/**
 	 * Добавление в друзья
+	 *
+	 * @param idUser   - пользователь
+	 * @param idFriend - друг пользователя, которого нужно добавить из друзей
 	 */
 	public void addFriend(Long idUser, Long idFriend) {
 		User user = inMemoryUserStorage.getUser(idUser);
@@ -33,6 +36,9 @@ public class UserService {
 
 	/**
 	 * Удаление из друзей
+	 *
+	 * @param idUser   - пользователь
+	 * @param idFriend - друг пользователя, которого нужно удалить из друзей
 	 */
 	public void deleteFriend(Long idUser, Long idFriend) {
 		User user = inMemoryUserStorage.getUser(idUser);
@@ -46,6 +52,9 @@ public class UserService {
 
 	/**
 	 * Вывод списка общих друзей
+	 *
+	 * @param idUser   - первый пользователь
+	 * @param idFriend - второй пользователь
 	 */
 	public List<Long> getGeneralFriends(Long idUser, Long idFriend) {
 		List<Long> generalFriends = new ArrayList<>();
@@ -59,7 +68,7 @@ public class UserService {
 				}
 			});
 			return generalFriends;
-		} else throw new EntityNotFoundException(User.class.getSimpleName(),
+		} else throw new EntityNotFoundException(User.class.getCanonicalName(),
 				"Не найден пользователь или его друг!");
 	}
 }

@@ -18,12 +18,12 @@ public class InMemoryUserStorage implements UserStorage {
 	private final HashMap<Long, User> users = new HashMap<>();
 	private Long idUser = 1L;
 
-	public List<User> getUsers() {
-		return new ArrayList<>(users.values());
-	}
-
 	public User getUser(Long idUser) {
 		return users.get(idUser);
+	}
+
+	public List<User> getUsers() {
+		return new ArrayList<>(users.values());
 	}
 
 	public User addUser(User user) {

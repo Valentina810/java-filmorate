@@ -14,10 +14,13 @@ import java.util.List;
 @NoArgsConstructor
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
-	private final HashMap<Integer, Film> films = new HashMap<>();
-	private Integer idFilm = 1;
+	private final HashMap<Long, Film> films = new HashMap<>();
+	private Long idFilm = 1L;
 	private static final LocalDate MIN_DATE_RELEASE = LocalDate.of(1895, 12, 28);
 
+	public Film getFilm(Long filmId) {
+		return films.get(filmId);
+	}
 	public List<Film> getFilms() {
 		return new ArrayList<>(films.values());
 	}

@@ -7,20 +7,28 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @Builder
 public class Film {
-	private Integer id;
+	private Long id;
 	@NotNull
 	@NotBlank
 	private String name;
+
 	@NotNull
 	@NotBlank
 	private String description;
+
 	@NotNull
 	private LocalDate releaseDate;
+
 	@NotNull
 	@Positive
 	private Integer duration;//inMinutes
+
+	private Set<Long> likesFromUsers;
+
+	private Long countLikes;
 }
