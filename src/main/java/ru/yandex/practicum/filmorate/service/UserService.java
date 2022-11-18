@@ -57,15 +57,15 @@ public class UserService {
 	 * @param idUser   - первый пользователь
 	 * @param idFriend - второй пользователь
 	 */
-	public List<Long> getGeneralFriends(Long idUser, Long idFriend) {
-		List<Long> generalFriends = new ArrayList<>();
+	public List<User> getGeneralFriends(Long idUser, Long idFriend) {
+		List<User> generalFriends = new ArrayList<>();
 		User user = inMemoryUserStorage.getUser(idUser);
 		User friend = inMemoryUserStorage.getUser(idFriend);
 		if ((user != null) && (friend != null)) {
 			user.getFriends().forEach(e ->
 			{
 				if (friend.getFriends().contains(e)) {
-					generalFriends.add(e);
+					generalFriends.add(inMemoryUserStorage.getUser(e));
 				}
 			});
 			return generalFriends;

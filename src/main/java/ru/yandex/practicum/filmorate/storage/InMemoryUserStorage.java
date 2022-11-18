@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 @NoArgsConstructor
@@ -19,11 +20,24 @@ public class InMemoryUserStorage implements UserStorage {
 	private Long idUser = 1L;
 
 	public User getUser(Long idUser) {
-		return users.get(idUser);
+		if (users.containsKey(idUser)) {
+			return users.get(idUser);
+		} else throw new EntityNotFoundException(User.class.getCanonicalName(), "Пользователь не найден!");
 	}
 
 	public List<User> getUsers() {
 		return new ArrayList<>(users.values());
+	}
+
+	public List<User> getFriendsUser(Long id) {
+		List<User> friends = new ArrayList<>();
+		users.get(id).getFriends().forEach(e ->
+		{
+			if (users.containsKey(e)) {
+				friends.add(users.get(e));
+			}
+		});
+		return friends;
 	}
 
 	public User addUser(User user) {
@@ -31,6 +45,7 @@ public class InMemoryUserStorage implements UserStorage {
 			if (user.getId() == null) {
 				user.setId(idUser++);
 			}
+			if (user.getFriends() == null) user.setFriends(new HashSet<>());
 			users.put(user.getId(), user);
 		}
 		return user;
@@ -39,6 +54,7 @@ public class InMemoryUserStorage implements UserStorage {
 	public User updateUser(User user) {
 		if (validate(user)) {
 			if (users.containsKey(user.getId())) {
+				if (user.getFriends() == null) user.setFriends(new HashSet<>());
 				users.put(user.getId(), user);
 			} else
 				throw new EntityNotFoundException(user.getClass().getSimpleName(), " с id " + user.getId() + " не найден!");
