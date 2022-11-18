@@ -8,7 +8,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -36,7 +35,7 @@ public class User implements Cloneable {
 		user.login = this.login;
 		user.name = this.name;
 		user.birthday = this.birthday;
-		user.friends=this.friends;
+		user.friends = this.friends;
 		return user;
 	}
 }

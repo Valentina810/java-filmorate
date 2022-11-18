@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.EntityValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
@@ -13,11 +14,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class UserValidationTest {
 	UserController userController;
+	UserService userService;
 	InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
 
 	@BeforeEach
 	void clearUserController() {
-		userController = new UserController(inMemoryUserStorage);
+		userController = new UserController(inMemoryUserStorage, userService);
 	}
 
 	@Test
