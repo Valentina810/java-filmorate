@@ -31,8 +31,7 @@ public class UserService {
 		if ((user != null) && (friend != null)) {
 			user.getFriends().add(idFriend);
 			friend.getFriends().add(idUser);
-		} else throw new EntityNotFoundException(User.class.getSimpleName(),
-				"Не найден пользователь или его друг!");
+		} else throw new EntityNotFoundException(User.class.getSimpleName(), " не найден!");
 	}
 
 	/**
@@ -47,8 +46,7 @@ public class UserService {
 		if ((user != null) && (friend != null)) {
 			user.getFriends().remove(idFriend);
 			friend.getFriends().remove(idUser);
-		} else throw new EntityNotFoundException(User.class.getSimpleName(),
-				"Не найден пользователь или его друг!");
+		} else throw new EntityNotFoundException(User.class.getSimpleName(), " не найден!");
 	}
 
 	/**
@@ -69,7 +67,6 @@ public class UserService {
 				}
 			});
 			return generalFriends;
-		} else throw new EntityNotFoundException(User.class.getCanonicalName(),
-				"Не найден пользователь или его друг!");
+		} else throw new EntityNotFoundException(User.class.getSimpleName(), " не найден!");
 	}
 }

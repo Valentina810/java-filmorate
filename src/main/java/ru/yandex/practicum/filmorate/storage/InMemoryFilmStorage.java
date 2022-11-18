@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 @NoArgsConstructor
@@ -19,7 +20,9 @@ public class InMemoryFilmStorage implements FilmStorage {
 	private static final LocalDate MIN_DATE_RELEASE = LocalDate.of(1895, 12, 28);
 
 	public Film getFilm(Long filmId) {
-		return films.get(filmId);
+		if (films.containsKey(filmId)) {
+			return films.get(filmId);
+		} else throw new EntityNotFoundException(Film.class.getSimpleName(), " c id " + filmId + " не найден!");
 	}
 
 	public List<Film> getFilms() {
@@ -29,6 +32,10 @@ public class InMemoryFilmStorage implements FilmStorage {
 	public Film addFilm(Film film) {
 		if (validate(film)) {
 			if (film.getId() == null) {
+				if (film.getLikesFromUsers() == null) {
+					film.setLikesFromUsers(new HashSet<>());
+					film.setCountLikes(0L);
+				}
 				film.setId(idFilm++);
 			}
 			films.put(film.getId(), film);
@@ -49,12 +56,16 @@ public class InMemoryFilmStorage implements FilmStorage {
 		} else {
 			return true;
 		}
-		throw new EntityValidationException(film.getClass().getSimpleName(), "Поле " + value + " в объекте " + film + " не прошло валидацию");
+		throw new EntityValidationException(film.getClass().getSimpleName(), "поле " + value + " не прошло валидацию");
 	}
 
 	public Film updateFilm(Film film) {
 		if (validate(film)) {
 			if (films.containsKey(film.getId())) {
+				if (film.getLikesFromUsers() == null) {
+					film.setLikesFromUsers(new HashSet<>());
+					film.setCountLikes(0L);
+				}
 				films.put(film.getId(), film);
 			} else
 				throw new EntityNotFoundException(film.getClass().getSimpleName(), " с id " + film.getId() + " не найден!");

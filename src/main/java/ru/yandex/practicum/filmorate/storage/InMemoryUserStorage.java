@@ -22,7 +22,7 @@ public class InMemoryUserStorage implements UserStorage {
 	public User getUser(Long idUser) {
 		if (users.containsKey(idUser)) {
 			return users.get(idUser);
-		} else throw new EntityNotFoundException(User.class.getCanonicalName(), "Пользователь не найден!");
+		} else throw new EntityNotFoundException(User.class.getSimpleName(), " с id " + idUser + " не найден!");
 	}
 
 	public List<User> getUsers() {
@@ -74,6 +74,6 @@ public class InMemoryUserStorage implements UserStorage {
 			user.setName(user.getLogin());
 			return true;
 		} else return true;
-		throw new EntityValidationException(user.getClass().getSimpleName(), "Поле " + value + " в объекте " + user + "  не прошло валидацию");
+		throw new EntityValidationException(user.getClass().getSimpleName(), "поле " + value + " не прошло валидацию");
 	}
 }

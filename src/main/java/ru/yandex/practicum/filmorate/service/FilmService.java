@@ -37,8 +37,9 @@ public class FilmService {
 		if ((film != null) && (user != null)) {
 			film.getLikesFromUsers().add(user.getId());
 			film.setCountLikes(film.getCountLikes() + 1);
-		} else throw new EntityNotFoundException(Film.class.getCanonicalName(),
-				"Не найден фильм или пользователь!");
+		} else
+			throw new EntityNotFoundException(User.class.getSimpleName() + " или " + Film.class.getSimpleName(),
+					" не найден!");
 	}
 
 	/**
@@ -53,8 +54,9 @@ public class FilmService {
 		if ((film != null) && (user != null)) {
 			film.getLikesFromUsers().remove(user.getId());
 			film.setCountLikes(film.getCountLikes() - 1);
-		} else throw new EntityNotFoundException(Film.class.getCanonicalName(),
-				"Не найден фильм или пользователь!");
+		} else
+			throw new EntityNotFoundException(User.class.getSimpleName() + " или " + Film.class.getSimpleName(),
+				" не найден!");
 	}
 
 	/**
@@ -66,7 +68,7 @@ public class FilmService {
 	public List<Film> getPopularMovies(Integer limit) {
 		return inMemoryFilmStorage.getFilms()
 				.stream()
-				.sorted((o1, o2) -> Math.toIntExact(o1.getCountLikes() - o2.getCountLikes()))
+				.sorted((o1, o2) -> Math.toIntExact(o2.getCountLikes() - o1.getCountLikes()))
 				.limit(limit)
 				.collect(Collectors.toList());
 	}

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
 public class EntityValidationException extends RuntimeException {
 	public EntityValidationException(String className, final String message) {
-		super("Ошибка валидации объекта " + className + "\n" + message);
-		log.warn("Ошибка валидации объекта " + className + "\n" + message);
+		super("Ошибка валидации объекта " + className + ": " + message);
+		log.warn("Ошибка валидации объекта " + className + ": " + message);
 	}
 }
