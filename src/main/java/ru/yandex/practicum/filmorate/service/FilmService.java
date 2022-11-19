@@ -72,4 +72,39 @@ public class FilmService {
 				.limit(limit)
 				.collect(Collectors.toList());
 	}
+
+	/**
+	 * Получить фильм по id
+	 * @param id -  id фильма
+	 * @return - данные о фильме
+	 */
+	public Film getFilm(Long id) {
+		return inMemoryFilmStorage.getFilm(id);
+	}
+
+	/**
+	 * Получить все фильмы
+	 * @return - список фильмов
+	 */
+	public List<Film> getFilms() {
+		return inMemoryFilmStorage.getFilms();
+	}
+
+	/**
+	 * Добавить фильм
+	 * @param film -  фильм
+	 * @return - добавленный фильм
+	 */
+	public Film addFilm(Film film) {
+		return inMemoryFilmStorage.addFilm(film);
+	}
+
+	/**
+	 * Обновить информацию о фильме
+	 * @param film -  фильм
+	 * @return - обновленный фильм
+	 */
+	public Film updateFilm(Film film) {
+		return inMemoryFilmStorage.updateFilm(film);
+	}
 }
