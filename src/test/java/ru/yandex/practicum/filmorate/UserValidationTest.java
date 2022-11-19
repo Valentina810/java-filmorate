@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.EntityValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -18,6 +19,7 @@ public class UserValidationTest {
 
 	@BeforeEach
 	void clearUserController() {
+		userService = new UserService(new InMemoryUserStorage());
 		userController = new UserController(userService);
 	}
 

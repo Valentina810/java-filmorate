@@ -75,6 +75,7 @@ public class FilmService {
 
 	/**
 	 * Получить фильм по id
+	 *
 	 * @param id -  id фильма
 	 * @return - данные о фильме
 	 */
@@ -84,6 +85,7 @@ public class FilmService {
 
 	/**
 	 * Получить все фильмы
+	 *
 	 * @return - список фильмов
 	 */
 	public List<Film> getFilms() {
@@ -92,6 +94,7 @@ public class FilmService {
 
 	/**
 	 * Добавить фильм
+	 *
 	 * @param film -  фильм
 	 * @return - добавленный фильм
 	 */
@@ -101,6 +104,7 @@ public class FilmService {
 
 	/**
 	 * Обновить информацию о фильме
+	 *
 	 * @param film -  фильм
 	 * @return - обновленный фильм
 	 */
