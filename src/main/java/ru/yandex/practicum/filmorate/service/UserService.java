@@ -69,4 +69,53 @@ public class UserService {
 			return generalFriends;
 		} else throw new EntityNotFoundException(User.class.getSimpleName(), " не найден!");
 	}
+
+	/**
+	 * Получить пользователя по id
+	 *
+	 * @param id -  id пользователя
+	 * @return - пользователь
+	 */
+	public User getUser(Long id) {
+		return inMemoryUserStorage.getUser(id);
+	}
+
+	/**
+	 * Получить список пользователей
+	 *
+	 * @return - список пользователей
+	 */
+	public List<User> getUsers() {
+		return inMemoryUserStorage.getUsers();
+	}
+
+	/**
+	 * Добавить пользователя
+	 *
+	 * @param user - пользователь
+	 * @return - добавленный пользователь
+	 */
+	public User addUser(User user) {
+		return inMemoryUserStorage.addUser(user);
+	}
+
+	/**
+	 * Обновить данные пользователя
+	 *
+	 * @param user - пользователь
+	 * @return - обновлённый пользователь
+	 */
+	public User updateUser(User user) {
+		return inMemoryUserStorage.updateUser(user);
+	}
+
+	/**
+	 * Получить список друзей пользователя
+	 *
+	 * @param id - id пользователя
+	 * @return - список друзей пользователя
+	 */
+	public List<User> getFriendsUser(Long id) {
+		return inMemoryUserStorage.getFriendsUser(id);
+	}
 }

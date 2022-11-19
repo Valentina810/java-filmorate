@@ -14,4 +14,6 @@ public interface UserStorage {
 	User updateUser(User user);
 
 	boolean validate(User user);
+
+	List<User> getFriendsUser(Long id);
 }
