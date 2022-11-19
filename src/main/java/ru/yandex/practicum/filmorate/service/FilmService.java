@@ -56,7 +56,7 @@ public class FilmService {
 			film.setCountLikes(film.getCountLikes() - 1);
 		} else
 			throw new EntityNotFoundException(User.class.getSimpleName() + " или " + Film.class.getSimpleName(),
-				" не найден!");
+					" не найден!");
 	}
 
 	/**
