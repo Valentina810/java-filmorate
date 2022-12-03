@@ -1,66 +1,110 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
-import ru.yandex.practicum.filmorate.exception.EntityValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-@Slf4j
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
-	private final HashMap<Integer, User> users = new HashMap<>();
-	private Integer idUser = 1;
+	private UserService userService;
 
+	@Autowired
+	public UserController(UserService userService) {
+		this.userService = userService;
+	}
+
+	/**
+	 * Получить данные о пользователе
+	 *
+	 * @param id - id пользователя
+	 * @return - данные о пользователе
+	 */
+	@GetMapping("/{id}")
+	public User getUser(@PathVariable Long id) {
+
+		return userService.getUser(id);
+	}
+
+	/**
+	 * Получить список пользователей
+	 *
+	 * @return - список пользователей
+	 */
 	@GetMapping
 	public List<User> getUsers() {
-		log.info("Запрошен список всех пользователей");
-		return new ArrayList<>(users.values());
+		return userService.getUsers();
 	}
 
+	/**
+	 * Добавить нового пользователя
+	 *
+	 * @param user - пользователь для добавления
+	 * @return - добавленный пользователь
+	 */
 	@PostMapping
 	public User addUser(@Valid @RequestBody User user) {
-		if (validate(user)) {
-			if (user.getId() == null) {
-				user.setId(idUser++);
-			}
-			users.put(user.getId(), user);
-			log.info("Пользователь {} добавлен", user);
-		}
-		return user;
+		return userService.addUser(user);
 	}
 
+	/**
+	 * Обновить пользователя
+	 *
+	 * @param user - пользователь
+	 * @return - обновленный пользователь
+	 */
 	@PutMapping
 	public User updateUser(@Valid @RequestBody User user) {
-		if (validate(user)) {
-			if (users.containsKey(user.getId())) {
-				users.put(user.getId(), user);
-				log.info("Пользователь {} обновлен", user);
-			} else
-				throw new EntityNotFoundException(user.getClass().getSimpleName(), " с id " + user.getId() + " не найден!");
-		}
-		return user;
+		return userService.updateUser(user);
 	}
 
-	public boolean validate(User user) {
-		String value;
-		if ((user.getEmail() == null) || ("".equals(user.getEmail()) || !user.getEmail().contains("@"))) {
-			value = "email";
-		} else if ((user.getLogin() == null) || ("".equals(user.getLogin()) || user.getLogin().contains(" "))) {
-			value = "login";
-		} else if ((user.getBirthday() == null) || (user.getBirthday().isAfter(LocalDate.now()))) {
-			value = "birthday";
-		} else if ((user.getName() == null) || ("".equals(user.getName()))) {
-			user.setName(user.getLogin());
-			return true;
-		} else return true;
-		throw new EntityValidationException(user.getClass().getSimpleName(), "Поле " + value + " в объекте " + user + "  не прошло валидацию");
+	/**
+	 * Добавить пользователя в друзья (взаимно)
+	 *
+	 * @param id       - id пользователя
+	 * @param friendId - id друга пользователя
+	 */
+	@PutMapping("/{id}/friends/{friendId}")
+	public void addFriend(@PathVariable Long id, @PathVariable Long friendId) {
+		userService.addFriend(id, friendId);
+	}
+
+	/**
+	 * Удалить пользователя из друзей (взаимно)
+	 *
+	 * @param id       - id пользователя
+	 * @param friendId - id друга пользователя
+	 */
+	@DeleteMapping("/{id}/friends/{friendId}")
+	public void deleteFriend(@PathVariable Long id, @PathVariable Long friendId) {
+		userService.deleteFriend(id, friendId);
+	}
+
+	/**
+	 * Получить список друщей пользователя
+	 *
+	 * @param id - id пользователя
+	 * @return - список друзей
+	 */
+	@GetMapping("/{id}/friends")
+	public List<User> getFriends(@PathVariable Long id) {
+		return userService.getFriendsUser(id);
+	}
+
+	/**
+	 * Получить список друзей, общих для двух пользователей
+	 *
+	 * @param id      - id  первого пользователя
+	 * @param otherId - id  второго пользователя
+	 * @return - список общих друзей
+	 */
+	@GetMapping("/{id}/friends/common/{otherId}")
+	public List<User> getGeneralFriends(@PathVariable Long id, @PathVariable Long otherId) {
+		return userService.getGeneralFriends(id, otherId);
 	}
 }

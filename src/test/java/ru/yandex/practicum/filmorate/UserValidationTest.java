@@ -5,17 +5,22 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.EntityValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserValidationTest {
 	UserController userController;
+	UserService userService;
 
 	@BeforeEach
 	void clearUserController() {
-		userController = new UserController();
+		userService = new UserService(new InMemoryUserStorage());
+		userController = new UserController(userService);
 	}
 
 	@Test
@@ -132,6 +137,7 @@ public class UserValidationTest {
 				.email("fgh7ujmk@ui")
 				.login("hjkojlfe")
 				.birthday(LocalDate.of(1990, 1, 1))
+				.friends(new HashSet<>())
 				.build();
 		User userExpected = testUser.clone();
 		userExpected.setName(userExpected.getLogin());
@@ -147,6 +153,7 @@ public class UserValidationTest {
 				.email("fgh7ujmk@ui")
 				.login("hjkojlfe")
 				.birthday(LocalDate.of(1990, 1, 1))
+				.friends(new HashSet<>())
 				.build();
 		User userExpected = testUser.clone();
 		userExpected.setName(userExpected.getLogin());
@@ -162,6 +169,7 @@ public class UserValidationTest {
 				.email("fgh7ujmk@ui")
 				.login("hjkojlfe")
 				.birthday(LocalDate.of(1990, 1, 1))
+				.friends(new HashSet<>())
 				.build();
 		User userExpected = testUser.clone();
 		userExpected.setId(userController.addUser(testUser).getId());
