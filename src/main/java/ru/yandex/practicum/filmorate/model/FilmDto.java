@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Data
 @Builder
-public class Film {
+public class FilmDto {
 	private Long id;
 	@NotNull
 	@NotBlank
@@ -30,5 +30,8 @@ public class Film {
 
 	private Set<Long> likesFromUsers;
 
-	private Long countLikes;
+	private Integer countLikes;
+
+	private MpaDto mpa;
+	private Set<GenreDto> filmGenre;
 }

@@ -18,8 +18,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 @Qualifier("UserDao")
@@ -34,18 +32,18 @@ public class UserDao implements UserStorage {
 	}
 
 	@Override
-	public UserDto getUser(Long idUser) {
+	public UserDto getUser(Long userId) {
 		try {
 			UserDto userDto = jdbcTemplate.queryForObject(
 					"SELECT * " +
 							"FROM fr_user " +
 							"WHERE user_id = ?",
-					new Object[]{idUser}, ROW_MAPPER);
-			userDto.setFriends(getFriendsUser(idUser));
+					new Object[]{userId}, ROW_MAPPER);
+			userDto.setFriends(getFriendsUser(userId));
 			return userDto;
 		} catch (DataAccessException dataAccessException) {
 			throw new EntityNotFoundException(UserDto.class.getSimpleName(),
-					" с id " + idUser + " не найден!");
+					" с id " + userId + " не найден!");
 		}
 	}
 
@@ -90,7 +88,7 @@ public class UserDao implements UserStorage {
 	}
 
 	@Override
-	public HashSet<UserDto> getFriendsUser(Long id) {
+	public HashSet<UserDto> getFriendsUser(Long userId) {
 		return new HashSet<>(jdbcTemplate.query(
 				"SELECT *" +
 						"FROM fr_user AS u " +
@@ -98,37 +96,37 @@ public class UserDao implements UserStorage {
 						"SELECT friend_id " +
 						"FROM fr_friendship AS f " +
 						"WHERE (f.user_id=?) AND (f.is_status=true))",
-				new Object[]{id}, ROW_MAPPER));
+				new Object[]{userId}, ROW_MAPPER));
 	}
 
 	@Override
-	public void addFriend(Long idUser, Long idFriend) {
+	public void addFriend(Long userId, Long idFriend) {
 		try {
 			jdbcTemplate.update(
 					"INSERT INTO FR_FRIENDSHIP(user_id, friend_id, is_status)" +
 							"VALUES (?, ?, ?)",
-					idUser, idFriend, true);
+					userId, idFriend, true);
 			jdbcTemplate.update(
 					"INSERT INTO FR_FRIENDSHIP(user_id, friend_id, is_status)" +
 							"VALUES (?, ?, ?)",
-					idFriend, idUser, false);
+					idFriend, userId, false);
 		} catch (DataAccessException dataAccessException) {
 			throw new EntityNotFoundException(UserDto.class.getSimpleName(),
-					" с id " + idUser + " или " + idFriend + " не найден!");
+					" с id " + userId + " или " + idFriend + " не найден!");
 		}
 	}
 
 	@Override
-	public void deleteFriend(Long idUser, Long idFriend) {
+	public void deleteFriend(Long userId, Long idFriend) {
 		jdbcTemplate.update(
 				"DELETE FROM fr_friendship " +
 						"WHERE (user_id = ?) AND (friend_id= ?) " +
-						"OR (user_id = ?) AND (friend_id= ?)", idUser, idFriend, idFriend, idUser);
+						"OR (user_id = ?) AND (friend_id= ?)", userId, idFriend, idFriend, userId);
 	}
 
 	@Override
-	public List<UserDto> getGeneralFriends(Long idUser, Long idFriend) {
-		HashSet<UserDto> friendsUser = getFriendsUser(idUser);
+	public List<UserDto> getGeneralFriends(Long userId, Long idFriend) {
+		HashSet<UserDto> friendsUser = getFriendsUser(userId);
 		HashSet<UserDto> friendsFriend = getFriendsUser(idFriend);
 		if (friendsUser.isEmpty() || friendsFriend.isEmpty())
 			return new ArrayList<>();
