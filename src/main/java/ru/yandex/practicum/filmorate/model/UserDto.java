@@ -12,7 +12,7 @@ import java.util.HashSet;
 
 @Data
 @Builder
-public class User implements Cloneable {
+public class UserDto implements Cloneable {
 	private Long id;
 	@Email
 	@NotNull
@@ -26,16 +26,16 @@ public class User implements Cloneable {
 	@PastOrPresent
 	private LocalDate birthday;
 
-	private HashSet<User> friends;
+	private HashSet<UserDto> friends;
 
-	public User clone() {
-		User user = User.builder().build();
-		user.id = this.id;
-		user.email = this.email;
-		user.login = this.login;
-		user.name = this.name;
-		user.birthday = this.birthday;
-		user.friends = this.friends;
-		return user;
+	public UserDto clone() {
+		UserDto userDto = UserDto.builder().build();
+		userDto.id = this.id;
+		userDto.email = this.email;
+		userDto.login = this.login;
+		userDto.name = this.name;
+		userDto.birthday = this.birthday;
+		userDto.friends = this.friends;
+		return userDto;
 	}
 }

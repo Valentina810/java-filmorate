@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
 import org.springframework.jdbc.core.RowMapper;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.UserDto;
 
 import java.sql.ResultSet;
 import java.util.HashSet;
@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface UserStorage {
 
-	RowMapper<User> ROW_MAPPER = (ResultSet resultSet, int rowNum) -> {
-		return User.builder()
+	RowMapper<UserDto> ROW_MAPPER = (ResultSet resultSet, int rowNum) -> {
+		return UserDto.builder()
 				.id(resultSet.getLong("USER_ID"))
 				.email(resultSet.getString("EMAIL"))
 				.login(resultSet.getString("LOGIN"))
@@ -19,15 +19,21 @@ public interface UserStorage {
 				.build();
 	};
 
-	User getUser(Long idUser);
+	UserDto getUser(Long idUser);
 
-	List<User> getUsers();
+	List<UserDto> getUsers();
 
-	User addUser(User user);
+	UserDto addUser(UserDto userDto);
 
-	User updateUser(User user);
+	UserDto updateUser(UserDto userDto);
 
-	boolean validate(User user);
+	HashSet<UserDto> getFriendsUser(Long id);
 
-	HashSet<User> getFriendsUser(Long id);
+	void addFriend(Long idUser, Long idFriend);
+
+	void deleteFriend(Long idUser, Long idFriend);
+
+	List<UserDto> getGeneralFriends(Long idUser, Long idFriend);
+
+	boolean validate(UserDto userDto);
 }

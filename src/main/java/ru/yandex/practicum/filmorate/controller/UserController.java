@@ -2,10 +2,11 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.UserDto;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -26,7 +27,7 @@ public class UserController {
 	 * @return - данные о пользователе
 	 */
 	@GetMapping("/{id}")
-	public User getUser(@PathVariable Long id) {
+	public UserDto getUser(@PathVariable Long id) {
 
 		return userService.getUser(id);
 	}
@@ -37,30 +38,30 @@ public class UserController {
 	 * @return - список пользователей
 	 */
 	@GetMapping
-	public List<User> getUsers() {
+	public List<UserDto> getUsers() {
 		return userService.getUsers();
 	}
 
 	/**
 	 * Добавить нового пользователя
 	 *
-	 * @param user - пользователь для добавления
+	 * @param userDto - пользователь для добавления
 	 * @return - добавленный пользователь
 	 */
 	@PostMapping
-	public User addUser(@Valid @RequestBody User user) {
-		return userService.addUser(user);
+	public UserDto addUser(@Valid @RequestBody UserDto userDto) {
+		return userService.addUser(userDto);
 	}
 
 	/**
 	 * Обновить пользователя
 	 *
-	 * @param user - пользователь
+	 * @param userDto - пользователь
 	 * @return - обновленный пользователь
 	 */
 	@PutMapping
-	public User updateUser(@Valid @RequestBody User user) {
-		return userService.updateUser(user);
+	public UserDto updateUser(@Valid @RequestBody UserDto userDto) {
+		return userService.updateUser(userDto);
 	}
 
 	/**
@@ -86,13 +87,13 @@ public class UserController {
 	}
 
 	/**
-	 * Получить список друщей пользователя
+	 * Получить список друзей пользователя
 	 *
 	 * @param id - id пользователя
 	 * @return - список друзей
 	 */
 	@GetMapping("/{id}/friends")
-	public List<User> getFriends(@PathVariable Long id) {
+	public HashSet<UserDto> getFriends(@PathVariable Long id) {
 		return userService.getFriendsUser(id);
 	}
 
@@ -104,7 +105,7 @@ public class UserController {
 	 * @return - список общих друзей
 	 */
 	@GetMapping("/{id}/friends/common/{otherId}")
-	public List<User> getGeneralFriends(@PathVariable Long id, @PathVariable Long otherId) {
+	public List<UserDto> getGeneralFriends(@PathVariable Long id, @PathVariable Long otherId) {
 		return userService.getGeneralFriends(id, otherId);
 	}
 }

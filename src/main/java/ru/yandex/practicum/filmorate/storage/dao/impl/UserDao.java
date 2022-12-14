@@ -8,10 +8,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
+import ru.yandex.practicum.filmorate.exception.EntityValidationException;
+import ru.yandex.practicum.filmorate.model.UserDto;
 import ru.yandex.practicum.filmorate.storage.dao.UserStorage;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,71 +34,127 @@ public class UserDao implements UserStorage {
 	}
 
 	@Override
-	public User getUser(Long idUser) {
-		User user = null;
+	public UserDto getUser(Long idUser) {
 		try {
-			user = jdbcTemplate.queryForObject(
+			UserDto userDto = jdbcTemplate.queryForObject(
 					"SELECT * " +
 							"FROM fr_user " +
 							"WHERE user_id = ?",
 					new Object[]{idUser}, ROW_MAPPER);
-			user.setFriends(getFriendsUser(idUser));
+			userDto.setFriends(getFriendsUser(idUser));
+			return userDto;
 		} catch (DataAccessException dataAccessException) {
-			log.info("Не удалось найти объект типа User с идентификатором " + idUser);
+			throw new EntityNotFoundException(UserDto.class.getSimpleName(),
+					" с id " + idUser + " не найден!");
 		}
-		return user;
 	}
 
 	@Override
-	public List<User> getUsers() {
+	public List<UserDto> getUsers() {
 		return jdbcTemplate.query(
 				"SELECT * " +
 						"FROM fr_user", ROW_MAPPER);
 	}
 
 	@Override
-	public User addUser(User user) {
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		jdbcTemplate.update(connection -> {
-			PreparedStatement ps = connection.prepareStatement(
-					"INSERT INTO fr_user(email, login, name, birth_date) " +
-							"VALUES (?, ?, ?, ?)",
-					new String[]{"user_id"});
-			ps.setString(1, user.getEmail());
-			ps.setString(2, user.getLogin());
-			ps.setString(3, user.getName());
-			ps.setString(4, String.valueOf(user.getBirthday()));
-			return ps;
-		}, keyHolder);
-		user.setId(keyHolder.getKey().longValue());
-		return user;
+	public UserDto addUser(UserDto userDto) {
+		if (validate(userDto)) {
+			KeyHolder keyHolder = new GeneratedKeyHolder();
+			jdbcTemplate.update(connection -> {
+				PreparedStatement ps = connection.prepareStatement(
+						"INSERT INTO fr_user(email, login, name, birth_date) " +
+								"VALUES (?, ?, ?, ?)",
+						new String[]{"user_id"});
+				ps.setString(1, userDto.getEmail());
+				ps.setString(2, userDto.getLogin());
+				ps.setString(3, userDto.getName());
+				ps.setString(4, String.valueOf(userDto.getBirthday()));
+				return ps;
+			}, keyHolder);
+			userDto.setId(keyHolder.getKey().longValue());
+		}
+		return userDto;
 	}
 
 	@Override
-	public User updateUser(User user) {
-		jdbcTemplate.update(
-				"UPDATE fr_user " +
-						"SET email= ?, login=?, name=?,birth_date=? " +
-						"WHERE user_id=?",
-				user.getEmail(), user.getLogin(), user.getName(), user.getBirthday(), user.getId());
-		return user;
+	public UserDto updateUser(UserDto userDto) {
+		if (validate(userDto)) {
+			getUser(userDto.getId());
+			jdbcTemplate.update(
+					"UPDATE fr_user " +
+							"SET email= ?, login=?, name=?,birth_date=? " +
+							"WHERE user_id=?",
+					userDto.getEmail(), userDto.getLogin(), userDto.getName(), userDto.getBirthday(), userDto.getId());
+		}
+		return userDto;
 	}
 
 	@Override
-	public boolean validate(User user) {
-		return false;
-	}
-
-	@Override
-	public HashSet<User> getFriendsUser(Long id) {
-		Set<User> collect = jdbcTemplate.query(
+	public HashSet<UserDto> getFriendsUser(Long id) {
+		return new HashSet<>(jdbcTemplate.query(
 				"SELECT *" +
 						"FROM fr_user AS u " +
-						"WHERE u.USER_ID IN (" +
-						"SELECT FRIEND_ID " +
-						"FROM FR_FRIENDSHIP AS f " +
-						"WHERE (f.USER_ID=?) AND (f.IS_STATUS=true));",
-				new Object[]{id}, ROW_MAPPER).stream().collect(Collectors.toSet());
-		return new HashSet<>(collect);
+						"WHERE u.user_id IN (" +
+						"SELECT friend_id " +
+						"FROM fr_friendship AS f " +
+						"WHERE (f.user_id=?) AND (f.is_status=true))",
+				new Object[]{id}, ROW_MAPPER));
+	}
+
+	@Override
+	public void addFriend(Long idUser, Long idFriend) {
+		try {
+			jdbcTemplate.update(
+					"INSERT INTO FR_FRIENDSHIP(user_id, friend_id, is_status)" +
+							"VALUES (?, ?, ?)",
+					idUser, idFriend, true);
+			jdbcTemplate.update(
+					"INSERT INTO FR_FRIENDSHIP(user_id, friend_id, is_status)" +
+							"VALUES (?, ?, ?)",
+					idFriend, idUser, false);
+		} catch (DataAccessException dataAccessException) {
+			throw new EntityNotFoundException(UserDto.class.getSimpleName(),
+					" с id " + idUser + " или " + idFriend + " не найден!");
+		}
+	}
+
+	@Override
+	public void deleteFriend(Long idUser, Long idFriend) {
+		jdbcTemplate.update(
+				"DELETE FROM fr_friendship " +
+						"WHERE (user_id = ?) AND (friend_id= ?) " +
+						"OR (user_id = ?) AND (friend_id= ?)", idUser, idFriend, idFriend, idUser);
+	}
+
+	@Override
+	public List<UserDto> getGeneralFriends(Long idUser, Long idFriend) {
+		HashSet<UserDto> friendsUser = getFriendsUser(idUser);
+		HashSet<UserDto> friendsFriend = getFriendsUser(idFriend);
+		if (friendsUser.isEmpty() || friendsFriend.isEmpty())
+			return new ArrayList<>();
+		else {
+			ArrayList<UserDto> generalFriends = new ArrayList<>();
+			friendsUser.forEach(e -> {
+				if (friendsFriend.contains(e)) {
+					generalFriends.add(e);
+				}
+			});
+			return generalFriends;
+		}
+	}
+
+	public boolean validate(UserDto userDto) {
+		String value;
+		if ((userDto.getEmail() == null) || ("".equals(userDto.getEmail()) || !userDto.getEmail().contains("@"))) {
+			value = "email";
+		} else if ((userDto.getLogin() == null) || ("".equals(userDto.getLogin()) || userDto.getLogin().contains(" "))) {
+			value = "login";
+		} else if ((userDto.getBirthday() == null) || (userDto.getBirthday().isAfter(LocalDate.now()))) {
+			value = "birthday";
+		} else if ((userDto.getName() == null) || ("".equals(userDto.getName()))) {
+			userDto.setName(userDto.getLogin());
+			return true;
+		} else return true;
+		throw new EntityValidationException(userDto.getClass().getSimpleName(), "поле " + value + " не прошло валидацию");
 	}
 }
