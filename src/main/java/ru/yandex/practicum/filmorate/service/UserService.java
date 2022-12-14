@@ -4,19 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.dao.impl.UserDao;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
 public class UserService {
-	private UserStorage inMemoryUserStorage;
+	private UserDao userDao;
 
 	@Autowired
-	public UserService(InMemoryUserStorage inMemoryUserStorage) {
-		this.inMemoryUserStorage = inMemoryUserStorage;
+	public UserService(UserDao userDao) {
+		this.userDao = userDao;
 	}
 
 	/**
@@ -26,11 +26,11 @@ public class UserService {
 	 * @param idFriend - друг пользователя, которого нужно добавить из друзей
 	 */
 	public void addFriend(Long idUser, Long idFriend) {
-		User user = inMemoryUserStorage.getUser(idUser);
-		User friend = inMemoryUserStorage.getUser(idFriend);
+		User user = userDao.getUser(idUser);
+		User friend = userDao.getUser(idFriend);
 		if ((user != null) && (friend != null)) {
-			user.getFriends().add(idFriend);
-			friend.getFriends().add(idUser);
+//			user.getFriends().add(idFriend);
+//			friend.getFriends().add(idUser);
 		} else throw new EntityNotFoundException(User.class.getSimpleName(), " не найден!");
 	}
 
@@ -41,8 +41,8 @@ public class UserService {
 	 * @param idFriend - друг пользователя, которого нужно удалить из друзей
 	 */
 	public void deleteFriend(Long idUser, Long idFriend) {
-		User user = inMemoryUserStorage.getUser(idUser);
-		User friend = inMemoryUserStorage.getUser(idFriend);
+		User user = userDao.getUser(idUser);
+		User friend = userDao.getUser(idFriend);
 		if ((user != null) && (friend != null)) {
 			user.getFriends().remove(idFriend);
 			friend.getFriends().remove(idUser);
@@ -57,13 +57,13 @@ public class UserService {
 	 */
 	public List<User> getGeneralFriends(Long idUser, Long idFriend) {
 		List<User> generalFriends = new ArrayList<>();
-		User user = inMemoryUserStorage.getUser(idUser);
-		User friend = inMemoryUserStorage.getUser(idFriend);
+		User user = userDao.getUser(idUser);
+		User friend = userDao.getUser(idFriend);
 		if ((user != null) && (friend != null)) {
 			user.getFriends().forEach(e ->
 			{
 				if (friend.getFriends().contains(e)) {
-					generalFriends.add(inMemoryUserStorage.getUser(e));
+//					generalFriends.add(userDao.getUser(e));
 				}
 			});
 			return generalFriends;
@@ -77,7 +77,7 @@ public class UserService {
 	 * @return - пользователь
 	 */
 	public User getUser(Long id) {
-		return inMemoryUserStorage.getUser(id);
+		return userDao.getUser(id);
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class UserService {
 	 * @return - список пользователей
 	 */
 	public List<User> getUsers() {
-		return inMemoryUserStorage.getUsers();
+		return userDao.getUsers();
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class UserService {
 	 * @return - добавленный пользователь
 	 */
 	public User addUser(User user) {
-		return inMemoryUserStorage.addUser(user);
+		return userDao.addUser(user);
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class UserService {
 	 * @return - обновлённый пользователь
 	 */
 	public User updateUser(User user) {
-		return inMemoryUserStorage.updateUser(user);
+		return userDao.updateUser(user);
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class UserService {
 	 * @param id - id пользователя
 	 * @return - список друзей пользователя
 	 */
-	public List<User> getFriendsUser(Long id) {
-		return inMemoryUserStorage.getFriendsUser(id);
+	public HashSet<User> getFriendsUser(Long id) {
+		return userDao.getFriendsUser(id);
 	}
 }
