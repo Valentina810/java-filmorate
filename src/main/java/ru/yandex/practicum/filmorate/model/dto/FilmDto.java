@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -7,6 +7,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Data
@@ -33,5 +35,22 @@ public class FilmDto {
 	private Integer countLikes;
 
 	private MpaDto mpa;
-	private Set<GenreDto> filmGenre;
+	private LinkedHashSet<GenreDto> genres;
+
+	public Integer getCountLikes() {
+		if (countLikes == null) return 0;
+		else return countLikes;
+	}
+
+	public Set<Long> getLikesFromUsers() {
+		if (likesFromUsers == null) {
+			return new HashSet<>();
+		} else return likesFromUsers;
+	}
+
+	public Set<GenreDto> getGenres() {
+		if (genres == null) {
+			return new HashSet<>();
+		} else return genres;
+	}
 }

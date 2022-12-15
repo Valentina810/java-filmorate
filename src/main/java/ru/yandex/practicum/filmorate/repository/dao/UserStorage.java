@@ -1,7 +1,7 @@
-package ru.yandex.practicum.filmorate.storage.dao;
+package ru.yandex.practicum.filmorate.repository.dao;
 
 import org.springframework.jdbc.core.RowMapper;
-import ru.yandex.practicum.filmorate.model.UserDto;
+import ru.yandex.practicum.filmorate.model.dto.UserDto;
 
 import java.sql.ResultSet;
 import java.util.HashSet;

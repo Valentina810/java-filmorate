@@ -1,7 +1,8 @@
-package ru.yandex.practicum.filmorate.storage.dao;
+package ru.yandex.practicum.filmorate.repository.dao;
 
 import org.springframework.jdbc.core.RowMapper;
-import ru.yandex.practicum.filmorate.model.FilmDto;
+import ru.yandex.practicum.filmorate.model.dto.FilmDto;
+import ru.yandex.practicum.filmorate.model.dto.MpaDto;
 
 import java.sql.ResultSet;
 import java.util.List;
@@ -15,6 +16,9 @@ public interface FilmStorage {
 				.releaseDate(resultSet.getDate("RELEASE_DATE").toLocalDate())
 				.duration(resultSet.getInt("DURATION"))
 				.countLikes(resultSet.getInt("COUNT_LIKES"))
+				.mpa(MpaDto.builder()
+						.id(resultSet.getInt("MPA_ID"))
+						.name(resultSet.getString("MPA_NAME")).build())
 				.build();
 	};
 

@@ -2,19 +2,19 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.model.UserDto;
-import ru.yandex.practicum.filmorate.storage.dao.impl.UserDao;
+import ru.yandex.practicum.filmorate.model.dto.UserDto;
+import ru.yandex.practicum.filmorate.repository.dao.impl.UserRepository;
 
 import java.util.HashSet;
 import java.util.List;
 
 @Service
 public class UserService {
-	private UserDao userDao;
+	private UserRepository userRepository;
 
 	@Autowired
-	public UserService(UserDao userDao) {
-		this.userDao = userDao;
+	public UserService(UserRepository userRepository) {
+		this.userRepository = userRepository;
 	}
 
 	/**
@@ -24,7 +24,7 @@ public class UserService {
 	 * @param idFriend - друг пользователя, которого нужно добавить из друзей
 	 */
 	public void addFriend(Long idUser, Long idFriend) {
-		userDao.addFriend(idUser, idFriend);
+		userRepository.addFriend(idUser, idFriend);
 	}
 
 	/**
@@ -34,7 +34,7 @@ public class UserService {
 	 * @param idFriend - друг пользователя, которого нужно удалить из друзей
 	 */
 	public void deleteFriend(Long idUser, Long idFriend) {
-		userDao.deleteFriend(idUser, idFriend);
+		userRepository.deleteFriend(idUser, idFriend);
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class UserService {
 	 * @param idFriend - второй пользователь
 	 */
 	public List<UserDto> getGeneralFriends(Long idUser, Long idFriend) {
-		return userDao.getGeneralFriends(idUser, idFriend);
+		return userRepository.getGeneralFriends(idUser, idFriend);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class UserService {
 	 * @return - пользователь
 	 */
 	public UserDto getUser(Long id) {
-		return userDao.getUser(id);
+		return userRepository.getUser(id);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class UserService {
 	 * @return - список пользователей
 	 */
 	public List<UserDto> getUsers() {
-		return userDao.getUsers();
+		return userRepository.getUsers();
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class UserService {
 	 * @return - добавленный пользователь
 	 */
 	public UserDto addUser(UserDto userDto) {
-		return userDao.addUser(userDto);
+		return userRepository.addUser(userDto);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class UserService {
 	 * @return - обновлённый пользователь
 	 */
 	public UserDto updateUser(UserDto userDto) {
-		return userDao.updateUser(userDto);
+		return userRepository.updateUser(userDto);
 	}
 
 	/**
@@ -93,6 +93,6 @@ public class UserService {
 	 * @return - список друзей пользователя
 	 */
 	public HashSet<UserDto> getFriendsUser(Long id) {
-		return userDao.getFriendsUser(id);
+		return userRepository.getFriendsUser(id);
 	}
 }

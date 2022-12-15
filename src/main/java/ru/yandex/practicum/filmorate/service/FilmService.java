@@ -2,19 +2,19 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.model.FilmDto;
-import ru.yandex.practicum.filmorate.storage.dao.impl.FilmDao;
+import ru.yandex.practicum.filmorate.model.dto.FilmDto;
+import ru.yandex.practicum.filmorate.repository.dao.impl.FilmRepository;
 
 import java.util.List;
 
 @Service
 public class FilmService {
 
-	private FilmDao filmDao;
+	private FilmRepository filmRepository;
 
 	@Autowired
-	public FilmService(FilmDao filmDao) {
-		this.filmDao = filmDao;
+	public FilmService(FilmRepository filmRepository) {
+		this.filmRepository = filmRepository;
 	}
 
 	/**
@@ -24,7 +24,7 @@ public class FilmService {
 	 * @param idUser - id пользователя
 	 */
 	public void addLike(Long idFilm, Long idUser) {
-		filmDao.addLike(idFilm, idUser);
+		filmRepository.addLike(idFilm, idUser);
 	}
 
 	/**
@@ -34,7 +34,7 @@ public class FilmService {
 	 * @param idUser - id пользователя
 	 */
 	public void deleteLike(Long idFilm, Long idUser) {
-		filmDao.deleteLike(idFilm, idUser);
+		filmRepository.deleteLike(idFilm, idUser);
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class FilmService {
 	 * @return - список фильмов
 	 */
 	public List<FilmDto> getPopularMovies(Integer limit) {
-		return filmDao.getPopularMovies(limit);
+		return filmRepository.getPopularMovies(limit);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class FilmService {
 	 * @return - данные о фильме
 	 */
 	public FilmDto getFilm(Long id) {
-		return filmDao.getFilm(id);
+		return filmRepository.getFilm(id);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class FilmService {
 	 * @return - список фильмов
 	 */
 	public List<FilmDto> getFilms() {
-		return filmDao.getFilms();
+		return filmRepository.getFilms();
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class FilmService {
 	 * @return - добавленный фильм
 	 */
 	public FilmDto addFilm(FilmDto filmDto) {
-		return filmDao.addFilm(filmDto);
+		return filmRepository.addFilm(filmDto);
 	}
 
 	/**
@@ -83,6 +83,6 @@ public class FilmService {
 	 * @return - обновленный фильм
 	 */
 	public FilmDto updateFilm(FilmDto filmDto) {
-		return filmDao.updateFilm(filmDto);
+		return filmRepository.updateFilm(filmDto);
 	}
 }

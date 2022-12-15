@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.dao.impl;
+package ru.yandex.practicum.filmorate.repository.dao.impl;
 
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +10,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exception.EntityValidationException;
-import ru.yandex.practicum.filmorate.model.UserDto;
-import ru.yandex.practicum.filmorate.storage.dao.UserStorage;
+import ru.yandex.practicum.filmorate.model.dto.UserDto;
+import ru.yandex.practicum.filmorate.repository.dao.UserStorage;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
@@ -22,12 +22,12 @@ import java.util.List;
 @Component
 @Qualifier("UserDao")
 @Log
-public class UserDao implements UserStorage {
+public class UserRepository implements UserStorage {
 
 	private final JdbcTemplate jdbcTemplate;
 
 	@Autowired
-	public UserDao(JdbcTemplate jdbcTemplate) {
+	public UserRepository(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
