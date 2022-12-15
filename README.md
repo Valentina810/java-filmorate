@@ -1,3 +1,3 @@
 # java-filmorate
 
-Template repository for Filmorate project.
+![Схема базы данных](https://github.com/Valentina810/java-filmorate/blob/main/schema.png)

@@ -99,6 +99,7 @@ public class FilmRepository implements FilmStorage {
 						"LEFT JOIN fr_mpa AS m " +
 						"ON fi.mpa_id=m.mpa_id", ROW_MAPPER);
 		query.forEach(e -> e.setGenres(getGenres(e.getId())));
+		query.forEach(e -> e.setLikesFromUsers(getLikesFromUsers(e.getId())));
 		return query;
 	}
 
@@ -204,6 +205,8 @@ public class FilmRepository implements FilmStorage {
 						"ON fi.mpa_id=m.mpa_id " +
 						"ORDER BY COUNT_LIKES DESC " +
 						"LIMIT ?", new Object[]{limit}, ROW_MAPPER);
+		query.forEach(e -> e.setGenres(getGenres(e.getId())));
+		query.forEach(e -> e.setLikesFromUsers(getLikesFromUsers(e.getId())));
 		return query;
 	}
 
