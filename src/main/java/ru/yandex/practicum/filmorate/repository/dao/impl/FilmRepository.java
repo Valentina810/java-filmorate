@@ -26,7 +26,7 @@ import java.util.Set;
 public class FilmRepository implements FilmStorage {
 
 	private final JdbcTemplate jdbcTemplate;
-	private GenreRepository genreRepository;
+	private final GenreRepository genreRepository;
 
 	@Autowired
 	public FilmRepository(JdbcTemplate jdbcTemplate, GenreRepository genreRepository) {
@@ -91,16 +91,16 @@ public class FilmRepository implements FilmStorage {
 
 	@Override
 	public List<FilmDto> getFilms() {
-		List<FilmDto> query = jdbcTemplate.query(
+		List<FilmDto> filmDtos = jdbcTemplate.query(
 				"SELECT fi.film_id, fi.name,fi.description, " +
 						"fi.release_date,fi.duration, fi.count_likes," +
 						"m.mpa_id,m.name AS mpa_name " +
 						"FROM fr_film AS fi " +
 						"LEFT JOIN fr_mpa AS m " +
 						"ON fi.mpa_id=m.mpa_id", ROW_MAPPER);
-		query.forEach(e -> e.setGenres(getGenres(e.getId())));
-		query.forEach(e -> e.setLikesFromUsers(getLikesFromUsers(e.getId())));
-		return query;
+		filmDtos.forEach(e -> e.setGenres(getGenres(e.getId())));
+		filmDtos.forEach(e -> e.setLikesFromUsers(getLikesFromUsers(e.getId())));
+		return filmDtos;
 	}
 
 	@Override
@@ -196,7 +196,7 @@ public class FilmRepository implements FilmStorage {
 	 */
 	@Override
 	public List<FilmDto> getPopularMovies(Integer limit) {
-		List<FilmDto> query = jdbcTemplate.query(
+		List<FilmDto> filmDtos = jdbcTemplate.query(
 				"SELECT fi.film_id, fi.name,fi.description, " +
 						"fi.release_date,fi.duration, fi.count_likes," +
 						"m.mpa_id,m.name AS mpa_name " +
@@ -205,9 +205,9 @@ public class FilmRepository implements FilmStorage {
 						"ON fi.mpa_id=m.mpa_id " +
 						"ORDER BY COUNT_LIKES DESC " +
 						"LIMIT ?", new Object[]{limit}, ROW_MAPPER);
-		query.forEach(e -> e.setGenres(getGenres(e.getId())));
-		query.forEach(e -> e.setLikesFromUsers(getLikesFromUsers(e.getId())));
-		return query;
+		filmDtos.forEach(e -> e.setGenres(getGenres(e.getId())));
+		filmDtos.forEach(e -> e.setLikesFromUsers(getLikesFromUsers(e.getId())));
+		return filmDtos;
 	}
 
 	@Override

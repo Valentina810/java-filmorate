@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/mpa")
 public class MpaController {
-	private MpaService mpaService;
+	private final MpaService mpaService;
 
 	@Autowired
 	public MpaController(MpaService mpaService) {

@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class FilmService {
 
-	private FilmRepository filmRepository;
+	private final FilmRepository filmRepository;
 
 	@Autowired
 	public FilmService(FilmRepository filmRepository) {
