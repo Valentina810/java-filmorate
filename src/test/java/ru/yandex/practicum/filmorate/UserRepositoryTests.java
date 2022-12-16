@@ -7,7 +7,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.model.dto.UserDto;
 import ru.yandex.practicum.filmorate.repository.dao.impl.FilmRepository;
 import ru.yandex.practicum.filmorate.repository.dao.impl.UserRepository;
 
@@ -36,6 +35,7 @@ public class UserRepositoryTests extends TestData {
 					if (!users.contains(e.getEmail())) {
 						userRepository.addUser(e);
 					}
+					else e.setId(userRepository.getUsers().stream().filter(a->a.getEmail().equals(e)).iterator().next().getId());
 				});
 		userRepository.addFriend(1L, 2L);
 		userRepository.addFriend(1L, 3L);

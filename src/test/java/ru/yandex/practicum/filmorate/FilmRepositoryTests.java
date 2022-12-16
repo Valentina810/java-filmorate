@@ -35,6 +35,7 @@ public class FilmRepositoryTests extends TestData {
 					if (!users.contains(e.getEmail())) {
 						userRepository.addUser(e);
 					}
+					else e.setId(userRepository.getUsers().stream().filter(a->a.getEmail().equals(e)).iterator().next().getId());
 				});
 
 		Set<Long> films = filmRepository.getFilms().stream().map(e -> e.getId()).collect(Collectors.toSet());
