@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.dto.FilmDto;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
@@ -25,7 +25,7 @@ public class FilmController {
 	 * @return - данные о фильме
 	 */
 	@GetMapping("/{id}")
-	public Film getFilm(@PathVariable Long id) {
+	public FilmDto getFilm(@PathVariable Long id) {
 		return filmService.getFilm(id);
 	}
 
@@ -35,30 +35,30 @@ public class FilmController {
 	 * @return - список всех фильмов
 	 */
 	@GetMapping
-	public List<Film> getFilms() {
+	public List<FilmDto> getFilms() {
 		return filmService.getFilms();
 	}
 
 	/**
 	 * Добавить фильм
 	 *
-	 * @param film - фильм
+	 * @param filmDto - фильм
 	 * @return - добавленный фильм
 	 */
 	@PostMapping
-	public Film addFilm(@Valid @RequestBody Film film) {
-		return filmService.addFilm(film);
+	public FilmDto addFilm(@Valid @RequestBody FilmDto filmDto) {
+		return filmService.addFilm(filmDto);
 	}
 
 	/**
 	 * Обновить фильм
 	 *
-	 * @param film - фильм
+	 * @param filmDto - фильм
 	 * @return - обновленный фильм
 	 */
 	@PutMapping
-	public Film updateFilm(@Valid @RequestBody Film film) {
-		return filmService.updateFilm(film);
+	public FilmDto updateFilm(@Valid @RequestBody FilmDto filmDto) {
+		return filmService.updateFilm(filmDto);
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class FilmController {
 	 * @return - список фильмов
 	 */
 	@GetMapping("/popular")
-	public List<Film> getPopularMovies(@RequestParam(required = false, defaultValue = "10") Integer count) {
+	public List<FilmDto> getPopularMovies(@RequestParam(required = false, defaultValue = "10") Integer count) {
 		return filmService.getPopularMovies(count);
 	}
 }

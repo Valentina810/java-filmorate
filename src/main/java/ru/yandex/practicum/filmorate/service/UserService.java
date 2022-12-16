@@ -2,21 +2,19 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
-import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.model.dto.UserDto;
+import ru.yandex.practicum.filmorate.repository.dao.impl.UserRepository;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
 public class UserService {
-	private UserStorage inMemoryUserStorage;
+	private UserRepository userRepository;
 
 	@Autowired
-	public UserService(InMemoryUserStorage inMemoryUserStorage) {
-		this.inMemoryUserStorage = inMemoryUserStorage;
+	public UserService(UserRepository userRepository) {
+		this.userRepository = userRepository;
 	}
 
 	/**
@@ -26,12 +24,7 @@ public class UserService {
 	 * @param idFriend - друг пользователя, которого нужно добавить из друзей
 	 */
 	public void addFriend(Long idUser, Long idFriend) {
-		User user = inMemoryUserStorage.getUser(idUser);
-		User friend = inMemoryUserStorage.getUser(idFriend);
-		if ((user != null) && (friend != null)) {
-			user.getFriends().add(idFriend);
-			friend.getFriends().add(idUser);
-		} else throw new EntityNotFoundException(User.class.getSimpleName(), " не найден!");
+		userRepository.addFriend(idUser, idFriend);
 	}
 
 	/**
@@ -41,12 +34,7 @@ public class UserService {
 	 * @param idFriend - друг пользователя, которого нужно удалить из друзей
 	 */
 	public void deleteFriend(Long idUser, Long idFriend) {
-		User user = inMemoryUserStorage.getUser(idUser);
-		User friend = inMemoryUserStorage.getUser(idFriend);
-		if ((user != null) && (friend != null)) {
-			user.getFriends().remove(idFriend);
-			friend.getFriends().remove(idUser);
-		} else throw new EntityNotFoundException(User.class.getSimpleName(), " не найден!");
+		userRepository.deleteFriend(idUser, idFriend);
 	}
 
 	/**
@@ -55,19 +43,8 @@ public class UserService {
 	 * @param idUser   - первый пользователь
 	 * @param idFriend - второй пользователь
 	 */
-	public List<User> getGeneralFriends(Long idUser, Long idFriend) {
-		List<User> generalFriends = new ArrayList<>();
-		User user = inMemoryUserStorage.getUser(idUser);
-		User friend = inMemoryUserStorage.getUser(idFriend);
-		if ((user != null) && (friend != null)) {
-			user.getFriends().forEach(e ->
-			{
-				if (friend.getFriends().contains(e)) {
-					generalFriends.add(inMemoryUserStorage.getUser(e));
-				}
-			});
-			return generalFriends;
-		} else throw new EntityNotFoundException(User.class.getSimpleName(), " не найден!");
+	public List<UserDto> getGeneralFriends(Long idUser, Long idFriend) {
+		return userRepository.getGeneralFriends(idUser, idFriend);
 	}
 
 	/**
@@ -76,8 +53,8 @@ public class UserService {
 	 * @param id -  id пользователя
 	 * @return - пользователь
 	 */
-	public User getUser(Long id) {
-		return inMemoryUserStorage.getUser(id);
+	public UserDto getUser(Long id) {
+		return userRepository.getUser(id);
 	}
 
 	/**
@@ -85,28 +62,28 @@ public class UserService {
 	 *
 	 * @return - список пользователей
 	 */
-	public List<User> getUsers() {
-		return inMemoryUserStorage.getUsers();
+	public List<UserDto> getUsers() {
+		return userRepository.getUsers();
 	}
 
 	/**
 	 * Добавить пользователя
 	 *
-	 * @param user - пользователь
+	 * @param userDto - пользователь
 	 * @return - добавленный пользователь
 	 */
-	public User addUser(User user) {
-		return inMemoryUserStorage.addUser(user);
+	public UserDto addUser(UserDto userDto) {
+		return userRepository.addUser(userDto);
 	}
 
 	/**
 	 * Обновить данные пользователя
 	 *
-	 * @param user - пользователь
+	 * @param userDto - пользователь
 	 * @return - обновлённый пользователь
 	 */
-	public User updateUser(User user) {
-		return inMemoryUserStorage.updateUser(user);
+	public UserDto updateUser(UserDto userDto) {
+		return userRepository.updateUser(userDto);
 	}
 
 	/**
@@ -115,7 +92,7 @@ public class UserService {
 	 * @param id - id пользователя
 	 * @return - список друзей пользователя
 	 */
-	public List<User> getFriendsUser(Long id) {
-		return inMemoryUserStorage.getFriendsUser(id);
+	public HashSet<UserDto> getFriendsUser(Long id) {
+		return userRepository.getFriendsUser(id);
 	}
 }
