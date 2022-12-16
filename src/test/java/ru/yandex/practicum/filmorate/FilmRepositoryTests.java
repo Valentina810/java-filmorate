@@ -28,23 +28,17 @@ public class FilmRepositoryTests extends TestData {
 	public final UserRepository userRepository;
 
 	@BeforeAll
-	public void createTestData() {
-		Set<String> users = userRepository.getUsers().stream().map(e -> e.getEmail()).collect(Collectors.toSet());
-		new ArrayList<>(List.of(userDto1, userDto2, userDto3))
-				.forEach(e -> {
-					if (!users.contains(e.getEmail())) {
-						userRepository.addUser(e);
-					}
-					else e.setId(userRepository.getUsers().stream().filter(a->a.getEmail().equals(e)).iterator().next().getId());
-				});
+	public  void createTestData()
+	{
+		new ArrayList<>(List.of(userDto1,userDto2,userDto3))
+				.forEach(e->userRepository.addUser(e));
+		userRepository.addFriend(1L,2L);
+		userRepository.addFriend(1L,3L);
+		userRepository.addFriend(2L,3L);
 
-		Set<Long> films = filmRepository.getFilms().stream().map(e -> e.getId()).collect(Collectors.toSet());
-		new ArrayList<>(List.of(testFilm1, testFilm2))
-				.forEach(e -> {
-					if (!films.contains(e.getId())) {
-						filmRepository.addFilm(e);
-					}
-				});
+		new ArrayList<>(List.of(testFilm1,testFilm2))
+				.forEach(e-> filmRepository.addFilm(e));
+
 	}
 
 	@Test
