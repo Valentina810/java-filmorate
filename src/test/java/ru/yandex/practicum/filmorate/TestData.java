@@ -1,22 +1,11 @@
 package ru.yandex.practicum.filmorate;
 
-import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.TestInstance;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.model.dto.FilmDto;
 import ru.yandex.practicum.filmorate.model.dto.GenreDto;
 import ru.yandex.practicum.filmorate.model.dto.MpaDto;
 import ru.yandex.practicum.filmorate.model.dto.UserDto;
-import ru.yandex.practicum.filmorate.repository.dao.impl.FilmRepository;
-import ru.yandex.practicum.filmorate.repository.dao.impl.GenreRepository;
-import ru.yandex.practicum.filmorate.repository.dao.impl.UserRepository;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -84,14 +73,14 @@ public class TestData {
 			)))
 			.build();
 
-	UserDto userDto1=UserDto.builder()
+	UserDto userDto1 = UserDto.builder()
 			.email("tom@mail.ru")
 			.login("tom")
 			.name("tom")
 			//.friends(userDto2,userDto3)
 			.birthday(LocalDate.of(2000, 03, 13))
 			.build();
-	UserDto userDto2=UserDto.builder()
+	UserDto userDto2 = UserDto.builder()
 			.email("olga@mail.ru")
 			.login("olga")
 			.name("olga")
@@ -99,7 +88,7 @@ public class TestData {
 			.birthday(LocalDate.of(1999, 04, 11))
 			.build();
 
-	UserDto userDto3=UserDto.builder()
+	UserDto userDto3 = UserDto.builder()
 			.email("krisi@mail.ru")
 			.login("krisi")
 			.name("krisi")
@@ -107,7 +96,7 @@ public class TestData {
 			.birthday(LocalDate.of(1985, 01, 10))
 			.build();
 
-	UserDto userDto4=UserDto.builder()
+	UserDto userDto4 = UserDto.builder()
 			.email("matt@mail.ru")
 			.login("matt")
 			.name("matt")

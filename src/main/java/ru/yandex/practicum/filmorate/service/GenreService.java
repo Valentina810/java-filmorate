@@ -22,6 +22,6 @@ public class GenreService {
 	}
 
 	public List<GenreDto> getGenres() {
-		return genreRepository.getAllGenre();
+		return genreRepository.getGenres();
 	}
 }

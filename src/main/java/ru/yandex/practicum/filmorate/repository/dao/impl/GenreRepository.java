@@ -29,7 +29,7 @@ public class GenreRepository {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	public List<GenreDto> getAllGenre() {
+	public List<GenreDto> getGenres() {
 		return jdbcTemplate.query(
 				"SELECT * " +
 						"FROM fr_genre", ROW_MAPPER);

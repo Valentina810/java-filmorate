@@ -40,8 +40,7 @@ public class FilmRepositoryTests extends TestData {
 		Set<Long> films = filmRepository.getFilms().stream().map(e -> e.getId()).collect(Collectors.toSet());
 		new ArrayList<>(List.of(testFilm1, testFilm2))
 				.forEach(e -> {
-					if (!films.contains(e.getId()))
-					{
+					if (!films.contains(e.getId())) {
 						filmRepository.addFilm(e);
 					}
 				});
@@ -85,7 +84,7 @@ public class FilmRepositoryTests extends TestData {
 
 	@Test
 	public void testPopularMoviesLimit2() {
-		filmRepository.getFilms().forEach(e->
+		filmRepository.getFilms().forEach(e ->
 		{
 			e.setCountLikes(0);
 			e.setLikesFromUsers(new HashSet<>());
@@ -104,7 +103,7 @@ public class FilmRepositoryTests extends TestData {
 
 	@Test
 	public void testPopularMoviesLimit1() {
-		filmRepository.getFilms().forEach(e->
+		filmRepository.getFilms().forEach(e ->
 		{
 			e.setCountLikes(0);
 			e.setLikesFromUsers(new HashSet<>());
