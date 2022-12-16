@@ -155,4 +155,13 @@ public class UserRepository implements UserStorage {
 		} else return true;
 		throw new EntityValidationException(userDto.getClass().getSimpleName(), "поле " + value + " не прошло валидацию");
 	}
+
+	public void deleteUser(Integer idUser) {
+		jdbcTemplate.update("DELETE FROM fr_film_likes " +
+				"WHERE (user_id= ?)", idUser);
+		jdbcTemplate.update("DELETE FROM FR_FRIENDSHIP " +
+				"WHERE (user_id= ?1) OR (FRIEND_ID=?1)", idUser);
+		jdbcTemplate.update("DELETE FROM FR_USER " +
+				"WHERE (user_id=?)", idUser);
+	}
 }

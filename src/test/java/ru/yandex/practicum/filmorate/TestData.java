@@ -6,7 +6,6 @@ import ru.yandex.practicum.filmorate.model.dto.MpaDto;
 import ru.yandex.practicum.filmorate.model.dto.UserDto;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -21,8 +20,6 @@ public class TestData {
 			.mpa(MpaDto.builder()
 					.id(2)
 					.name("PG").build())
-			.likesFromUsers(new HashSet<>(List.of(3L)))
-			.countLikes(1)
 			.genres(new LinkedHashSet<>(List.of(
 					GenreDto.builder()
 							.id(5)
@@ -41,8 +38,6 @@ public class TestData {
 			.mpa(MpaDto.builder()
 					.id(4)
 					.name("R").build())
-			.likesFromUsers(new HashSet<>(List.of(3L, 1L, 2L)))
-			.countLikes(3)
 			.genres(new LinkedHashSet<>(List.of(
 					GenreDto.builder()
 							.id(2)
@@ -61,8 +56,6 @@ public class TestData {
 			.mpa(MpaDto.builder()
 					.id(4)
 					.name("R").build())
-			.likesFromUsers(new HashSet<>(List.of(1L)))
-			.countLikes(1)
 			.genres(new LinkedHashSet<>(List.of(
 					GenreDto.builder()
 							.id(2)
@@ -77,14 +70,12 @@ public class TestData {
 			.email("tom@mail.ru")
 			.login("tom")
 			.name("tom")
-			//.friends(userDto2,userDto3)
 			.birthday(LocalDate.of(2000, 03, 13))
 			.build();
 	UserDto userDto2 = UserDto.builder()
 			.email("olga@mail.ru")
 			.login("olga")
 			.name("olga")
-			//.friends(new HashSet<>(List.of(userDto1,userDto3)))
 			.birthday(LocalDate.of(1999, 04, 11))
 			.build();
 
@@ -92,7 +83,6 @@ public class TestData {
 			.email("krisi@mail.ru")
 			.login("krisi")
 			.name("krisi")
-			//.friends(new HashSet<>(List.of(userDto1,userDto2)))
 			.birthday(LocalDate.of(1985, 01, 10))
 			.build();
 
@@ -100,7 +90,6 @@ public class TestData {
 			.email("matt@mail.ru")
 			.login("matt")
 			.name("matt")
-			//.friends(new HashSet<>(List.of(userDto1,userDto2)))
 			.birthday(LocalDate.of(2003, 12, 12))
 			.build();
 }

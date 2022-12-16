@@ -1,12 +1,14 @@
 package ru.yandex.practicum.filmorate;
 
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.yandex.practicum.filmorate.model.dto.UserDto;
 import ru.yandex.practicum.filmorate.repository.dao.impl.FilmRepository;
 import ru.yandex.practicum.filmorate.repository.dao.impl.UserRepository;
 
@@ -27,82 +29,84 @@ public class UserRepositoryTests extends TestData {
 	public final FilmRepository filmRepository;
 	public final UserRepository userRepository;
 
+	@BeforeEach
+	@AfterAll
+	public void clearTestData() {
+		Set<Long> collect = userRepository.getUsers().stream().map(e -> e.getId()).collect(Collectors.toSet());
+		for (Long idUser : collect) {
+			userRepository.deleteUser(Math.toIntExact(idUser));
+		}
+	}
+
 	@Test
 	public void testGetUser() {
-		userRepository.updateUser(userDto1);
-
-		assertEquals(userDto1, userRepository.getUser(userDto1.getId()));
+		UserDto userDto = userRepository.addUser(userDto1);
+		assertEquals(userDto, userRepository.getUser(userDto.getId()));
 	}
 
 	@Test
 	public void testGetUsers() {
-		userRepository.updateUser(userDto1);
-		userRepository.updateUser(userDto2);
-		userRepository.updateUser(userDto3);
-
-		assertEquals(3, userRepository.getUsers().size());
-
+		userRepository.addUser(userDto1);
+		userRepository.addUser(userDto2);
+		assertEquals(2, userRepository.getUsers().size());
 	}
 
 	@Test
 	public void testAddUser() {
-		userRepository.addUser(userDto4);
+		userDto4.setId(userRepository.addUser(userDto4).getId());
 		userDto4.setFriends(new HashSet<>());
-
 		assertEquals(userDto4, userRepository.getUser(userDto4.getId()));
 	}
 
 	@Test
 	public void testUpdateUser() {
-		userDto1.setName("New name");
-		userRepository.deleteFriend(userDto1.getId(), 2L);
-		userRepository.deleteFriend(userDto1.getId(), 3L);
-		userRepository.updateUser(userDto1);
-		userDto1.setFriends(new HashSet<>());
+		UserDto userDto = userRepository.addUser(userDto2);
+		userDto.setName("New");
+		UserDto newUserDto = userRepository.updateUser(userDto);
+		assertEquals(userDto.getName(), newUserDto.getName());
 
-		assertEquals(userDto1, userRepository.getUser(userDto1.getId()));
 	}
 
 	@Test
 	public void testGetFriendsUser() {
-		userRepository.updateUser(userDto4);
+		UserDto userDto = userRepository.addUser(userDto3);
+		UserDto friendUserDto = userRepository.addUser(userDto1);
+		userRepository.addFriend(userDto.getId(), friendUserDto.getId());
 
-		assertEquals(userDto4.getFriends(), userRepository.getUser(userDto4.getId()).getFriends());
+
+		assertEquals(new HashSet<>(List.of(friendUserDto)), userRepository.getUser(userDto.getId()).getFriends());
 	}
 
 	@Test
 	public void testAddFriend() {
-		userRepository.deleteFriend(userDto2.getId(), 1L);
-		userRepository.deleteFriend(userDto2.getId(), 3L);
+		UserDto userDto = userRepository.addUser(userDto3);
+		UserDto friendUserDto = userRepository.addUser(userDto1);
+		userRepository.addFriend(userDto.getId(), friendUserDto.getId());
 
-		userRepository.addFriend(userDto2.getId(), userDto1.getId());
-		userDto2.setFriends(new HashSet<>(List.of(userDto1)));
-
-		assertEquals(userDto2.getFriends(), userRepository.getUser(userDto2.getId()).getFriends());
+		assertEquals(new HashSet<>(List.of(friendUserDto)), userRepository.getUser(userDto.getId()).getFriends());
 	}
 
 	@Test
 	public void testDeleteFriend() {
-		userRepository.deleteFriend(userDto2.getId(), 1L);
-		userRepository.deleteFriend(userDto2.getId(), 3L);
+		UserDto userDto = userRepository.addUser(userDto3);
+		UserDto friendUserDto = userRepository.addUser(userDto1);
+		userRepository.addFriend(userDto.getId(), friendUserDto.getId());
+		assertEquals(new HashSet<>(List.of(friendUserDto)), userRepository.getUser(userDto.getId()).getFriends());
 
-		userRepository.addFriend(userDto2.getId(), userDto1.getId());
-		userDto2.setFriends(new HashSet<>(List.of(userDto1)));
-		assertEquals(userDto2.getFriends(), userRepository.getUser(userDto2.getId()).getFriends());
-
-		userRepository.deleteFriend(userDto2.getId(), userDto1.getId());
-		assertEquals(new HashSet<>(), userRepository.getUser(userDto2.getId()).getFriends());
+		userRepository.deleteFriend(userDto.getId(), friendUserDto.getId());
+		assertEquals(new HashSet<>(), userRepository.getUser(userDto.getId()).getFriends());
 	}
 
 	@Test
 	public void testGetGeneralFriends() {
-		userRepository.deleteFriend(userDto1.getId(), 2L);
-		userRepository.deleteFriend(userDto1.getId(), 3L);
-		userRepository.deleteFriend(userDto2.getId(), 3L);
-		assertEquals(0, userRepository.getGeneralFriends(userDto1.getId(), userDto2.getId()).size());
+		UserDto userDtoo1 = userRepository.addUser(userDto1);
+		UserDto userDtoo2 = userRepository.addUser(userDto2);
+		UserDto userDtoo3 = userRepository.addUser(userDto3);
 
-		userRepository.addFriend(userDto1.getId(), userDto2.getId());
-		userRepository.addFriend(userDto3.getId(), userDto2.getId());
-		assertEquals(1, userRepository.getGeneralFriends(userDto1.getId(), userDto3.getId()).size());
+		userRepository.addFriend(userDtoo1.getId(), userDtoo2.getId());
+		userRepository.addFriend(userDtoo3.getId(), userDtoo2.getId());
+
+		assertEquals(new ArrayList<>(List.of(userDtoo2)),
+				userRepository.getGeneralFriends(userDtoo1.getId(), userDtoo3.getId()));
 	}
 }

@@ -12,8 +12,10 @@ import ru.yandex.practicum.filmorate.model.dto.MpaDto;
 import ru.yandex.practicum.filmorate.repository.dao.impl.FilmRepository;
 import ru.yandex.practicum.filmorate.repository.dao.impl.UserRepository;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,17 +30,12 @@ public class FilmRepositoryTests extends TestData {
 	public final UserRepository userRepository;
 
 	@BeforeAll
-	public  void createTestData()
-	{
-		new ArrayList<>(List.of(userDto1,userDto2,userDto3))
-				.forEach(e->userRepository.addUser(e));
-		userRepository.addFriend(1L,2L);
-		userRepository.addFriend(1L,3L);
-		userRepository.addFriend(2L,3L);
-
-		new ArrayList<>(List.of(testFilm1,testFilm2))
-				.forEach(e-> filmRepository.addFilm(e));
-
+	public void createTestData() {
+		userDto1 = userRepository.addUser(userDto1);
+		userDto2 = userRepository.addUser(userDto2);
+		userDto3 = userRepository.addUser(userDto3);
+		new ArrayList<>(List.of(testFilm1, testFilm2))
+				.forEach(e -> filmRepository.addFilm(e));
 	}
 
 	@Test
@@ -63,7 +60,7 @@ public class FilmRepositoryTests extends TestData {
 	public void testUpdateFilm() {
 		testFilm2.setName("test name");
 		testFilm2.setDescription("test description");
-		testFilm2.setLikesFromUsers(new HashSet<>(List.of(1L, 3L)));
+		testFilm2.setLikesFromUsers(new HashSet<>(List.of(userDto1.getId(), userDto3.getId())));
 		testFilm2.setCountLikes(2);
 		testFilm2.setMpa(MpaDto.builder()
 				.id(5)
@@ -86,9 +83,9 @@ public class FilmRepositoryTests extends TestData {
 			filmRepository.updateFilm(e);
 		});
 		testFilm1.setCountLikes(2);
-		testFilm1.setLikesFromUsers(new HashSet<>(List.of(3L, 2L)));
+		testFilm1.setLikesFromUsers(new HashSet<>(List.of(userDto3.getId(), userDto2.getId())));
 		testFilm2.setCountLikes(3);
-		testFilm2.setLikesFromUsers(new HashSet<>(List.of(3L, 1L, 2L)));
+		testFilm2.setLikesFromUsers(new HashSet<>(List.of(userDto3.getId(), userDto1.getId(), userDto2.getId())));
 		filmRepository.updateFilm(testFilm1);
 		filmRepository.updateFilm(testFilm2);
 
@@ -105,9 +102,9 @@ public class FilmRepositoryTests extends TestData {
 			filmRepository.updateFilm(e);
 		});
 		testFilm1.setCountLikes(1);
-		testFilm1.setLikesFromUsers(new HashSet<>(List.of(3L)));
+		testFilm1.setLikesFromUsers(new HashSet<>(List.of(userDto3.getId())));
 		testFilm2.setCountLikes(3);
-		testFilm2.setLikesFromUsers(new HashSet<>(List.of(3L, 1L, 2L)));
+		testFilm2.setLikesFromUsers(new HashSet<>(List.of(userDto3.getId(), userDto1.getId(), userDto2.getId())));
 		filmRepository.updateFilm(testFilm1);
 		filmRepository.updateFilm(testFilm2);
 
@@ -118,12 +115,12 @@ public class FilmRepositoryTests extends TestData {
 	@Test
 	public void testAddLike() {
 		testFilm1.setCountLikes(1);
-		testFilm1.setLikesFromUsers(new HashSet<>(List.of(1L)));
+		testFilm1.setLikesFromUsers(new HashSet<>(List.of(userDto1.getId())));
 		filmRepository.updateFilm(testFilm1);
 
-		filmRepository.addLike(testFilm1.getId(), 3L);
+		filmRepository.addLike(testFilm1.getId(), userDto3.getId());
 		testFilm1.setCountLikes(2);
-		testFilm1.setLikesFromUsers(new HashSet<>(List.of(1L, 3L)));
+		testFilm1.setLikesFromUsers(new HashSet<>(List.of(userDto1.getId(), userDto3.getId())));
 
 		assertEquals(testFilm1.getCountLikes(),
 				filmRepository.getFilm(testFilm1.getId()).getCountLikes());
@@ -134,12 +131,12 @@ public class FilmRepositoryTests extends TestData {
 	@Test
 	public void testDeleteLike() {
 		testFilm1.setCountLikes(2);
-		testFilm1.setLikesFromUsers(new HashSet<>(List.of(1L, 2L)));
+		testFilm1.setLikesFromUsers(new HashSet<>(List.of(userDto1.getId(), userDto2.getId())));
 		filmRepository.updateFilm(testFilm1);
 
-		filmRepository.deleteLike(testFilm1.getId(), 2L);
+		filmRepository.deleteLike(testFilm1.getId(), userDto2.getId());
 		testFilm1.setCountLikes(1);
-		testFilm1.setLikesFromUsers(new HashSet<>(List.of(1L)));
+		testFilm1.setLikesFromUsers(new HashSet<>(List.of(userDto1.getId())));
 
 		assertEquals(testFilm1.getCountLikes(),
 				filmRepository.getFilm(testFilm1.getId()).getCountLikes());
