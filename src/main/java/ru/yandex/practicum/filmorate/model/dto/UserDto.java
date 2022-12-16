@@ -28,6 +28,12 @@ public class UserDto implements Cloneable {
 
 	private HashSet<UserDto> friends;
 
+	public HashSet<UserDto> getFriends() {
+		if (friends == null) {
+			return new HashSet<>();
+		} else return friends;
+	}
+
 	public UserDto clone() {
 		UserDto userDto = UserDto.builder().build();
 		userDto.id = this.id;
