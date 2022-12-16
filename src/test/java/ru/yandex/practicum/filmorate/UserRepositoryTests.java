@@ -39,7 +39,7 @@ public class UserRepositoryTests extends TestData {
 						try {
 							e.setId(userRepository.getUsers().stream().filter(a->a.getEmail().equals(e)).iterator().next().getId());
 						} catch (java.util.NoSuchElementException ex) {
-							userRepository.addUser(e);
+
 						}
 				});
 		userRepository.addFriend(1L, 2L);
